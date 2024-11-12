@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -20,6 +21,7 @@ fun TextChip(
     color: Color,
     modifier: Modifier = Modifier,
     textColor: Color = Color.White,
+    fontWeight: FontWeight = FontWeight.Normal
 ) {
     Column(
         modifier = modifier
@@ -32,7 +34,8 @@ fun TextChip(
         Text(
             text = text,
             fontSize = 16.sp,
-            color = textColor
+            color = textColor,
+            fontWeight = fontWeight,
         )
     }
 }
