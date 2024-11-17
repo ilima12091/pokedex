@@ -26,7 +26,7 @@ fun PokemonDetailsTopBar() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(WindowInsets.statusBars.asPaddingValues())
-            .padding(vertical = 16.dp, horizontal = 16.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -41,6 +41,7 @@ fun PokemonDetailsTopBar() {
         IconButton(onClick = {}) {
             Icon(
                 Icons.Outlined.FavoriteBorder,
+//                Icons.Outlined.Favorite,
                 contentDescription = "Favorite",
                 Modifier.size(28.dp),
                 colorResource(id = android.R.color.white)

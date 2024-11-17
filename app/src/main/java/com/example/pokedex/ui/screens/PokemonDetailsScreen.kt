@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,8 +38,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
+import com.example.pokedex.R
 import com.example.pokedex.ui.components.PokemonDetailsTopBar
 import com.example.pokedex.ui.components.TextChip
+import com.example.pokedex.ui.utils.capitalizeString
 import com.example.pokedex.ui.utils.getColorFromType
 import com.example.pokedex.ui.utils.getPokemonOrder
 import com.example.pokedex.ui.viewModels.PokemonDetailsViewModel
@@ -47,7 +50,7 @@ import com.example.pokedex.ui.viewModels.PokemonDetailsViewModel
 fun PokemonDetailsScreen(
     modifier: Modifier = Modifier,
     viewModel: PokemonDetailsViewModel = viewModel(),
-    pokemonId: String = "charizard"
+    pokemonId: String = "charmander"
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val selectedTabIndex = uiState.selectedTabIndex
@@ -110,7 +113,7 @@ fun PokemonDetailsScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = pokemonDetails?.name?.replaceFirstChar { it.uppercase() } ?: "",
+                            text = capitalizeString(pokemonDetails?.name ?: ""),
                             fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
@@ -120,7 +123,7 @@ fun PokemonDetailsScreen(
                         ) {
                             items(pokemonDetails?.types ?: emptyList()) {
                                 TextChip(
-                                    text = it.type.name.replaceFirstChar { char -> char.uppercase() },
+                                    text = capitalizeString(it.type.name),
                                     color = Color(0x80FFFFFF),
                                     modifier = Modifier
                                         .defaultMinSize(minWidth = 100.dp),
@@ -142,6 +145,7 @@ fun PokemonDetailsScreen(
                 ) {
                     AsyncImage(
                         model = pokemonDetails?.sprites?.frontDefault ?: "",
+                        placeholder = painterResource(R.drawable.pokeball_icon),
                         contentDescription = pokemonDetails?.name ?: "",
                         modifier = Modifier
                             .size(240.dp)
@@ -165,7 +169,8 @@ fun PokemonDetailsScreen(
                         TabRow(
                             selectedTabIndex = selectedTabIndex,
                             containerColor = Color.Transparent,
-                        ) {
+
+                            ) {
                             tabs.forEachIndexed { index, title ->
                                 Tab(
                                     text = { Text(title) },
@@ -181,11 +186,11 @@ fun PokemonDetailsScreen(
                         ) {
                             when (selectedTabIndex) {
                                 0 -> {
-                                    PokemonAboutScreen()
+                                    PokemonAboutScreen(pokemonDetails)
                                 }
 
                                 1 -> {
-                                    Text("Base Stats")
+                                    PokemonStatsScreen(pokemonDetails)
                                 }
 
                                 2 -> {

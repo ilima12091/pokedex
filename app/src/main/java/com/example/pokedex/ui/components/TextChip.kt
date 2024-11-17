@@ -27,7 +27,7 @@ fun TextChip(
         modifier = modifier
             .clip(RoundedCornerShape(40.dp))
             .background(color)
-            .padding(horizontal = 4.dp, vertical = 2.dp),
+            .padding(horizontal = 4.dp, vertical = 4.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

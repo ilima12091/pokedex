@@ -10,7 +10,8 @@ data class FetchPokemonDetailsResponse(
     val order: Int,
     val types: List<PokemonType>,
     val stats: List<PokemonStat>,
-    val moves: List<PokemonMove>
+    val moves: List<PokemonMove>,
+    val abilities: List<PokemonAbility>
 )
 
 data class Sprites(
@@ -46,4 +47,13 @@ data class PokemonType(
 data class Type(
     val name: String,
     val url: String,
+)
+
+data class PokemonAbility(
+    val ability: Ability
+)
+
+data class Ability(
+    val name: String,
+    val url: String
 )
