@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.pokedex.ui.screens.auth.CreateUserScreen
 import com.example.pokedex.ui.screens.auth.LoginScreen
 
 @Composable
@@ -21,6 +22,9 @@ fun AuthNavHost(
     ) {
         composable("login") {
             LoginScreen(onLoginSuccess = { onNavigateToMain() })
+        }
+        composable("createUser") {
+            CreateUserScreen(onUserCreated = { })
         }
     }
 }

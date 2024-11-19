@@ -35,13 +35,14 @@ fun PasswordField(
     password: String,
     setPassword: (String) -> Unit,
     modifier: Modifier = Modifier,
+    placeholderText: String = "Password",
 ) {
     val (passwordVisible, setPasswordVisible) = remember { mutableStateOf(false) }
 
     TextField(
         value = password,
         onValueChange = { newPassword -> setPassword(newPassword) },
-        placeholder = { Text(text = "Password") },
+        placeholder = { Text(text = placeholderText) },
         modifier = modifier.fillMaxWidth(),
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         trailingIcon = {
