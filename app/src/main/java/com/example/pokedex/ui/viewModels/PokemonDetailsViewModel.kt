@@ -3,6 +3,7 @@ package com.example.pokedex.ui.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex.api.responses.FetchPokemonDetailsResponse
+import com.example.pokedex.api.responses.Species
 import com.example.pokedex.data.PokemonRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,7 +13,9 @@ import kotlinx.coroutines.launch
 data class PokemonDetailsScreenUiState(
     val selectedTabIndex: Int = 0,
     val pokemonDetails: FetchPokemonDetailsResponse? = null,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val evolutionChain: List<Species>? = null,
+    val isLoadingEvolutionChain: Boolean = false
 )
 
 class PokemonDetailsViewModel : ViewModel() {
@@ -33,6 +36,21 @@ class PokemonDetailsViewModel : ViewModel() {
                 it.copy(
                     pokemonDetails = pokemonDetails,
                     isLoading = false
+                )
+            }
+        }
+    }
+
+    fun fetchPokemonEvolutionChain(name: String) {
+        _uiState.update {
+            it.copy(isLoadingEvolutionChain = true)
+        }
+        viewModelScope.launch {
+            val evolutionChain = PokemonRepository.fetchPokemonEvolutionChain(name)
+            _uiState.update {
+                it.copy(
+                    evolutionChain = evolutionChain,
+                    isLoadingEvolutionChain = false
                 )
             }
         }

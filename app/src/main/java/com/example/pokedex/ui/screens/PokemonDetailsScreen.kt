@@ -50,14 +50,16 @@ import com.example.pokedex.ui.viewModels.PokemonDetailsViewModel
 fun PokemonDetailsScreen(
     modifier: Modifier = Modifier,
     viewModel: PokemonDetailsViewModel = viewModel(),
-    pokemonId: String = "charmander"
+    pokemonId: String = "charmeleon"
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val selectedTabIndex = uiState.selectedTabIndex
     val pokemonDetails = uiState.pokemonDetails
     val isLoading = uiState.isLoading
+    val evolutionChain = uiState.evolutionChain
+    val isLoadingEvolutionChain = uiState.isLoadingEvolutionChain
 
-    val tabs = listOf("About", "Base Stats", "Evolution", "Moves")
+    val tabs = listOf("About", "Base Stats", "Evolution")
     val pagerState = rememberPagerState(
         initialPage = uiState.selectedTabIndex,
         pageCount = {
@@ -72,7 +74,17 @@ fun PokemonDetailsScreen(
     }
 
     LaunchedEffect(pokemonId) {
-        pokemonId.let { viewModel.fetchPokemonDetails(it) }
+        pokemonId.let {
+            viewModel.fetchPokemonDetails(it)
+        }
+    }
+
+    LaunchedEffect(selectedTabIndex) {
+        if (selectedTabIndex == 2 && evolutionChain == null) {
+            pokemonId.let {
+                viewModel.fetchPokemonEvolutionChain(it)
+            }
+        }
     }
 
     Scaffold(
@@ -194,11 +206,11 @@ fun PokemonDetailsScreen(
                                 }
 
                                 2 -> {
-                                    Text("Evolution")
-                                }
-
-                                3 -> {
-                                    Text("Moves")
+                                    PokemonEvolutionsScreen(
+                                        evolutionChain = evolutionChain,
+                                        isLoadingEvolutionChain = isLoadingEvolutionChain,
+                                        pokemonDetails = pokemonDetails
+                                    )
                                 }
                             }
                         }
