@@ -1,6 +1,8 @@
 package com.example.pokedex.ui.screens.auth
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -15,7 +17,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.pokedex.ui.components.auth.LoginFooter
 import com.example.pokedex.ui.components.auth.LoginForm
 import com.example.pokedex.ui.components.auth.LoginHeader
 
@@ -23,7 +27,8 @@ import com.example.pokedex.ui.components.auth.LoginHeader
 fun LoginScreen(
     modifier: Modifier = Modifier,
     onLoginSuccess: () -> Unit,
-    viewModel: LoginViewModel = viewModel()
+    onNavigateToCreateUser: () -> Unit,
+    viewModel: LoginViewModel = viewModel(),
 ) {
     val (email, setEmail) = remember { mutableStateOf("") }
     val (password, setPassword) = remember { mutableStateOf("") }
@@ -42,6 +47,8 @@ fun LoginScreen(
             setPassword=setPassword,
             onLoginClick= { viewModel.login(email, password) },
         )
+        Spacer(modifier = Modifier.height(16.dp))
+        LoginFooter(onNavigateToCreateUser = onNavigateToCreateUser)
     }
 
     if (loginState is LoginState.Loading) {
@@ -73,6 +80,6 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview(modifier: Modifier = Modifier) {
     PokedexTheme {
-        LoginScreen(modifier=modifier, onLoginSuccess = {})
+        LoginScreen(modifier=modifier, onLoginSuccess = {}, onNavigateToCreateUser = {})
     }
 }

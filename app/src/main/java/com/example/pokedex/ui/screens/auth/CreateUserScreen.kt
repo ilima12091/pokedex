@@ -1,6 +1,10 @@
 package com.example.pokedex.ui.screens.auth
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,11 +19,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex.ui.components.auth.CreateUserForm
 import com.example.pokedex.ui.components.auth.LoginHeader
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.unit.dp
+
 
 @Composable
 fun CreateUserScreen(
     modifier: Modifier = Modifier,
     onUserCreated: () -> Unit,
+    onBackToLogin: () -> Unit,
     viewModel: CreateUserViewModel = viewModel()
 ) {
     val (email, setEmail) = remember { mutableStateOf("") }
@@ -27,35 +38,48 @@ fun CreateUserScreen(
     val (confirmPassword, setConfirmPassword) = remember { mutableStateOf("") }
     val createUserState by viewModel.createUserState.collectAsState()
 
-    Column(
-        modifier=modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        LoginHeader()
-        CreateUserForm(
-            email=email,
-            setEmail=setEmail,
-            password=password,
-            setPassword=setPassword,
-            confirmPassword = confirmPassword,
-            setConfirmPassword=setConfirmPassword,
-            onCreateUserClick = { viewModel.createUser(email, password, confirmPassword) },
-        )
+    Scaffold(
+        topBar = {
+            IconButton(onClick = onBackToLogin) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Go back",
+                    Modifier.size(28.dp),
+                    colorResource(id = android.R.color.black)
+                )
+            }
+        }
+    ) { innerPadding ->
+        Column(
+            modifier=modifier.padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            LoginHeader()
+            CreateUserForm(
+                email=email,
+                setEmail=setEmail,
+                password=password,
+                setPassword=setPassword,
+                confirmPassword = confirmPassword,
+                setConfirmPassword=setConfirmPassword,
+                onCreateUserClick = { viewModel.createUser(email, password, confirmPassword) },
+            )
 
-        when (createUserState) {
-            is CreateUserState.Loading -> {
-                CircularProgressIndicator()
-            }
-            is CreateUserState.Success -> {
-                LaunchedEffect(Unit) {
-                    onUserCreated()
+            when (createUserState) {
+                is CreateUserState.Loading -> {
+                    CircularProgressIndicator()
                 }
+                is CreateUserState.Success -> {
+                    LaunchedEffect(Unit) {
+                        onUserCreated()
+                    }
+                }
+                is CreateUserState.Error -> {
+                    val errorMessage = (createUserState as CreateUserState.Error).message
+                    Text("Error: $errorMessage", color = Color.Red)
+                }
+                else -> {}
             }
-            is CreateUserState.Error -> {
-                val errorMessage = (createUserState as CreateUserState.Error).message
-                Text("Error: $errorMessage", color = Color.Red)
-            }
-            else -> {}
         }
     }
 }

@@ -21,10 +21,16 @@ fun AuthNavHost(
         modifier = modifier
     ) {
         composable("login") {
-            LoginScreen(onLoginSuccess = { onNavigateToMain() })
+            LoginScreen(
+                onLoginSuccess = { onNavigateToMain() },
+                onNavigateToCreateUser = { navController.navigate("createUser") },
+            )
         }
         composable("createUser") {
-            CreateUserScreen(onUserCreated = { })
+            CreateUserScreen(
+                onUserCreated = { },
+                onBackToLogin = { navController.popBackStack() },
+            )
         }
     }
 }
