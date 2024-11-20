@@ -20,6 +20,7 @@ fun LoginForm(
     password: String,
     setPassword: (String) -> Unit,
     onLoginClick: () -> Unit,
+    isLoading: Boolean,
 ) {
     val (emailError, setEmailError) = remember { mutableStateOf<String?>(null) }
     val (passwordError, setPasswordError) = remember { mutableStateOf<String?>(null) }
@@ -66,10 +67,12 @@ fun LoginForm(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        val isFormValid = emailError == null && passwordError == null
+        val noFormErrors = emailError == null && passwordError == null
+        val isFormValid = email.isNotBlank() && password.isNotBlank() && noFormErrors
         SubmitButton(
             text = "Sign In",
-            enabled = isFormValid,
+            enabled = noFormErrors && !isLoading,
+            showLoader = isLoading,
             onClick = {
                 setHasAttemptedSubmit(true)
 
@@ -83,7 +86,7 @@ fun LoginForm(
                     is ValidationResult.Error -> setPasswordError(result.message)
                 }
 
-                if (emailError != null && passwordError != null) {
+                if (isFormValid) {
                     onLoginClick()
                 }
             }

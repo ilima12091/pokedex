@@ -3,6 +3,7 @@ package com.example.pokedex.ui.screens.auth
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +18,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex.ui.components.auth.LoginFooter
@@ -46,14 +48,10 @@ fun LoginScreen(
             password=password,
             setPassword=setPassword,
             onLoginClick= { viewModel.login(email, password) },
+            isLoading = loginState is LoginState.Loading,
         )
         Spacer(modifier = Modifier.height(16.dp))
         LoginFooter(onNavigateToCreateUser = onNavigateToCreateUser)
-    }
-
-    if (loginState is LoginState.Loading) {
-//        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-        Text(text="Loading...")
     }
 
     when (loginState) {
@@ -68,12 +66,19 @@ fun LoginScreen(
                 snackbarHostState.showSnackbar(errorMessage)
             }
         }
-        else -> {
-
-        }
+        else -> { }
     }
 
-    SnackbarHost(hostState = snackbarHostState)
+    SnackbarHost(
+        hostState = snackbarHostState,
+    ) { data ->
+        Snackbar(
+            snackbarData = data,
+            containerColor = Color(0xFFFFCDD2),
+            contentColor = Color.Black,
+            actionColor = Color(0xFFD32F2F),
+        )
+    }
 }
 
 @Preview(showBackground = true)
