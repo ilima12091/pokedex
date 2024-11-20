@@ -1,12 +1,14 @@
 package com.example.pokedex.ui.screens.auth
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -18,15 +20,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex.ui.components.auth.CreateUserForm
-import com.example.pokedex.ui.components.auth.LoginHeader
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 
 @Composable
@@ -46,21 +51,38 @@ fun CreateUserScreen(
 
     Scaffold(
         topBar = {
-            IconButton(onClick = onBackToLogin) {
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Go back",
-                    Modifier.size(28.dp),
-                    colorResource(id = android.R.color.black)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = Color(0xFFEEEEEE)),
+            ) {
+                IconButton(onClick = onBackToLogin) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Go back",
+                        Modifier.size(28.dp),
+                        colorResource(id = android.R.color.black)
+                    )
+                }
+                Text(
+                    text = "Register Your Account",
+                    style = TextStyle(
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                    )
                 )
             }
         }
     ) { innerPadding ->
         Column(
-            modifier=modifier.padding(innerPadding),
+            modifier=modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .background(color = Color(0xFFEEEEEE)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            LoginHeader()
             CreateUserForm(
                 email=email,
                 setEmail=setEmail,

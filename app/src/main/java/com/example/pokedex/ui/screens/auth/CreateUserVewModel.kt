@@ -38,7 +38,7 @@ class CreateUserViewModel : ViewModel() {
                     uid?.let {
                         firestore.collection("users").document(it).set(userDetails)
                             .addOnSuccessListener {
-                                _createUserState.value = CreateUserState.Success
+                                loginAfterCreation(email, password)
                             }
                             .addOnFailureListener { e ->
                                 _createUserState.value = CreateUserState.Error(e.message ?: "Failed to save user details")
@@ -46,6 +46,18 @@ class CreateUserViewModel : ViewModel() {
                     }
                 } else {
                     val errorMessage = task.exception?.message ?: "Unknown error occurred"
+                    _createUserState.value = CreateUserState.Error(errorMessage)
+                }
+            }
+    }
+
+    private fun loginAfterCreation(email: String, password: String) {
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    _createUserState.value = CreateUserState.Success
+                } else {
+                    val errorMessage = task.exception?.message ?: "Failed to log in after account creation"
                     _createUserState.value = CreateUserState.Error(errorMessage)
                 }
             }

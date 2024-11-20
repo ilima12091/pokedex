@@ -16,15 +16,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun LoginHeader() {
+fun AuthHeader(title: String, subtitle: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 64.dp, bottom = 32.dp),
+            .padding(top = 32.dp, bottom = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Hello Again!",
+            text = title,
             style = TextStyle(
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
@@ -35,11 +35,11 @@ fun LoginHeader() {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Welcome back you’ve been missed!",
+            text = subtitle,
             style = TextStyle(
-                fontSize = 16.sp,
+                fontSize = 24.sp,
                 fontWeight = FontWeight.Normal,
-                color = Color.Gray,
+                color = Color.DarkGray,
             )
         )
     }

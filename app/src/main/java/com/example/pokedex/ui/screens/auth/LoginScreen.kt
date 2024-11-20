@@ -1,10 +1,11 @@
 package com.example.pokedex.ui.screens.auth
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Snackbar
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex.ui.components.auth.LoginFooter
 import com.example.pokedex.ui.components.auth.LoginForm
-import com.example.pokedex.ui.components.auth.LoginHeader
+import com.example.pokedex.ui.components.auth.AuthHeader
 
 @Composable
 fun LoginScreen(
@@ -38,10 +39,16 @@ fun LoginScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     Column(
-        modifier=modifier,
+        modifier = modifier
+            .background(color = Color(0xFFEEEEEE))
+            .fillMaxSize()
+        ,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        LoginHeader()
+        AuthHeader(
+            title = "Welcome to your Pokédex!",
+            subtitle = "Are you ready to catch'em all?",
+        )
         LoginForm(
             email=email,
             setEmail=setEmail,

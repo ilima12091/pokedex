@@ -65,7 +65,7 @@ fun LoginForm(
             },
             errorMessage = if (hasAttemptedSubmit) passwordError else null
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(64.dp))
 
         val noFormErrors = emailError == null && passwordError == null
         val isFormValid = email.isNotBlank() && password.isNotBlank() && noFormErrors

@@ -29,7 +29,7 @@ fun LoginFooter(onNavigateToCreateUser: () -> Unit) {
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "Create User",
+            text = "Register Now",
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold

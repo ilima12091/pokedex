@@ -28,7 +28,7 @@ fun AuthNavHost(
         }
         composable("createUser") {
             CreateUserScreen(
-                onUserCreated = { },
+                onUserCreated = { onNavigateToMain() },
                 onBackToLogin = { navController.popBackStack() },
             )
         }
