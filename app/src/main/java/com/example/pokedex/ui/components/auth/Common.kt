@@ -1,7 +1,9 @@
 package com.example.pokedex.ui.components.auth
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,6 +16,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -45,6 +48,43 @@ fun PlainTextField(value: String, onValueChange: (String) -> Unit, placeholderTe
         )
     )
 }
+
+@Composable
+fun ValidatedField(
+    field: @Composable () -> Unit,
+    errorMessage: String?,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        Box(
+            modifier = Modifier
+                .padding(4.dp)
+                .then(
+                    if (errorMessage != null) {
+                        Modifier.border(
+                            width = 1.dp,
+                            color = Color.Red,
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                    } else {
+                        Modifier
+                    }
+                )
+        ) {
+            field()
+        }
+
+        if (errorMessage != null) {
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(top = 4.dp, start = 8.dp)
+            )
+        }
+    }
+}
+
 
 @Composable
 fun PasswordField(
@@ -106,9 +146,11 @@ fun SubmitButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         modifier = modifier
             .fillMaxWidth()
             .height(64.dp)
