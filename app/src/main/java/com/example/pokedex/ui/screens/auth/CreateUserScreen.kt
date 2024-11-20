@@ -36,6 +36,8 @@ fun CreateUserScreen(
     val (email, setEmail) = remember { mutableStateOf("") }
     val (password, setPassword) = remember { mutableStateOf("") }
     val (confirmPassword, setConfirmPassword) = remember { mutableStateOf("") }
+    val (name, setName) = remember { mutableStateOf("") }
+    val (lastName, setLastName) = remember { mutableStateOf("") }
     val createUserState by viewModel.createUserState.collectAsState()
 
     Scaffold(
@@ -62,7 +64,19 @@ fun CreateUserScreen(
                 setPassword=setPassword,
                 confirmPassword = confirmPassword,
                 setConfirmPassword=setConfirmPassword,
-                onCreateUserClick = { viewModel.createUser(email, password, confirmPassword) },
+                name = name,
+                setName = setName,
+                lastName = lastName,
+                setLastName = setLastName,
+                onCreateUserClick = {
+                    viewModel.createUser(
+                        email,
+                        password,
+                        confirmPassword,
+                        name,
+                        lastName,
+                    )
+                },
             )
 
             when (createUserState) {
