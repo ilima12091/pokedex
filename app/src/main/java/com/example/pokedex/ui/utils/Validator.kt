@@ -20,21 +20,19 @@ object Validator {
     }
 
     fun validatePassword(password: String): ValidationResult {
+        val emptyValidation = validateNonEmpty(password, "Password")
+        if (emptyValidation is ValidationResult.Error) {
+            return emptyValidation
+        }
+
         val hasMinimumLength = password.length >= 8
         val hasUppercase = password.any { it.isUpperCase() }
         val hasDigitOrSymbol = password.any { it.isDigit() || !it.isLetterOrDigit() }
 
-        val errorMessage = """
-            Invalid Password, password must at least:
-              - Have 8 characters
-              - Include one uppercase letter
-              - Include one number or symbol
-        """.trimIndent()
-
         return if (hasMinimumLength && hasUppercase && hasDigitOrSymbol) {
             ValidationResult.Success
         } else {
-            ValidationResult.Error(errorMessage)
+            ValidationResult.Error("Password does not meet requirements")
         }
     }
 
