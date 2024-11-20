@@ -14,6 +14,16 @@ class CreateUserViewModel : ViewModel() {
     val createUserState: StateFlow<CreateUserState> = _createUserState
 
     fun createUser(email: String, password: String, confirmPassword: String, name: String, lastName: String) {
+        if (email.isBlank() || password.isBlank()) {
+            _createUserState.value = CreateUserState.Error("Email and Password cannot be empty")
+            return
+        }
+
+        if (password != confirmPassword) {
+            _createUserState.value = CreateUserState.Error("Passwords do not match.")
+            return
+        }
+
         _createUserState.value = CreateUserState.Loading
 
         firebaseAuth.createUserWithEmailAndPassword(email, password)

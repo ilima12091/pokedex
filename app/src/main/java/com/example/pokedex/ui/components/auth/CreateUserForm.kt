@@ -29,6 +29,7 @@ fun CreateUserForm(
     lastName: String,
     setLastName: (String) -> Unit,
     onCreateUserClick: () -> Unit,
+    isLoading: Boolean,
 ) {
     val (emailError, setEmailError) = remember { mutableStateOf<String?>(null) }
     val (passwordError, setPasswordError) = remember { mutableStateOf<String?>(null) }
@@ -111,10 +112,13 @@ fun CreateUserForm(
             password = password
         )
         Spacer(modifier = Modifier.height(16.dp))
-        val isFormValid = emailError == null && passwordError == null && confirmPasswordError == null
+
+        val noFormErrors = emailError == null && passwordError == null && confirmPasswordError == null
+        val isFormValid = email.isNotBlank() && password.isNotBlank() && confirmPassword.isNotBlank() && noFormErrors
         SubmitButton(
             text = "Create User",
-            enabled = isFormValid,
+            enabled = noFormErrors,
+            showLoader = isLoading,
             onClick = {
                 setHasAttemptedSubmit(true)
 
@@ -133,7 +137,7 @@ fun CreateUserForm(
                     is ValidationResult.Error -> setConfirmPasswordError(result.message)
                 }
 
-                if (emailError != null && passwordError != null && confirmPasswordError != null) {
+                if (isFormValid) {
                     onCreateUserClick()
                 }
             }

@@ -48,7 +48,7 @@ fun LoginScreen(
             password=password,
             setPassword=setPassword,
             onLoginClick= { viewModel.login(email, password) },
-            isLoading = loginState is LoginState.Loading,
+            isLoading = loginState is LoginState.Loading
         )
         Spacer(modifier = Modifier.height(16.dp))
         LoginFooter(onNavigateToCreateUser = onNavigateToCreateUser)

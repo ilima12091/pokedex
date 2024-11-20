@@ -22,6 +22,9 @@ import com.example.pokedex.ui.components.auth.LoginHeader
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 
@@ -39,6 +42,7 @@ fun CreateUserScreen(
     val (name, setName) = remember { mutableStateOf("") }
     val (lastName, setLastName) = remember { mutableStateOf("") }
     val createUserState by viewModel.createUserState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         topBar = {
@@ -68,6 +72,7 @@ fun CreateUserScreen(
                 setName = setName,
                 lastName = lastName,
                 setLastName = setLastName,
+                isLoading = createUserState is CreateUserState.Loading,
                 onCreateUserClick = {
                     viewModel.createUser(
                         email,
@@ -80,9 +85,6 @@ fun CreateUserScreen(
             )
 
             when (createUserState) {
-                is CreateUserState.Loading -> {
-                    CircularProgressIndicator()
-                }
                 is CreateUserState.Success -> {
                     LaunchedEffect(Unit) {
                         onUserCreated()
@@ -90,10 +92,24 @@ fun CreateUserScreen(
                 }
                 is CreateUserState.Error -> {
                     val errorMessage = (createUserState as CreateUserState.Error).message
-                    Text("Error: $errorMessage", color = Color.Red)
+                    LaunchedEffect(errorMessage) {
+                        snackbarHostState.showSnackbar(errorMessage)
+                    }
                 }
                 else -> {}
             }
+
+        }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+        ) { data ->
+            Snackbar(
+                snackbarData = data,
+                containerColor = Color(0xFFFFCDD2),
+                contentColor = Color.Black,
+                actionColor = Color(0xFFD32F2F),
+            )
         }
     }
 }
