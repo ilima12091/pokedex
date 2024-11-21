@@ -38,9 +38,9 @@ class HomeViewModel: ViewModel() {
 
         viewModelScope.launch {
             try {
-                val pokemonNames = (1..20).map { "pokemon_$it" }
+                val pokemonOrder = (1..20).map { it.toString() }
 
-                val pokemonDetailsList = pokemonNames.map { name ->
+                val pokemonDetailsList = pokemonOrder.map { name ->
                     async {
                         PokemonRepository.fetchPokemonDetails(name)
                     }
