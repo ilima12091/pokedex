@@ -1,6 +1,5 @@
 package com.example.pokedex.ui.viewModels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -13,9 +12,10 @@ data class ProfileUiState(
     val lastName: String? = null,
     val email: String? = null,
     val errorMessage: String? = null,
+    val profilePictureUrl: String? = null
 )
 
-class ProfileViewModel: ViewModel() {
+class ProfileViewModel : ViewModel() {
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -50,12 +50,14 @@ class ProfileViewModel: ViewModel() {
                 if (document.exists()) {
                     val name = document.getString("name")
                     val lastName = document.getString("lastName")
+                    val profilePictureUrl = document.getString("profilePictureUrl")
                     _uiState.value = ProfileUiState(
                         isLoading = false,
                         name = name,
                         lastName = lastName,
                         email = email,
-                        errorMessage = null
+                        errorMessage = null,
+                        profilePictureUrl = profilePictureUrl
                     )
                 } else {
                     _uiState.value = ProfileUiState(
