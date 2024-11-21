@@ -11,7 +11,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.pokedex.AuthActivity
+import com.example.pokedex.ui.screens.HomeScreen
 import com.example.pokedex.ui.screens.PokemonDetailsScreen
+import com.example.pokedex.ui.screens.PokemonListScreen
 import com.example.pokedex.ui.screens.ProfileScreen
 
 @Composable
@@ -23,7 +25,7 @@ fun MainNavHost(
     NavHost(
         navController = navController,
         modifier = modifier,
-        startDestination = "ProfileScreen"
+        startDestination = "HomeScreen"
     ) {
         composable(
             "PokemonDetailsScreen/{pokemonId}",
@@ -46,6 +48,18 @@ fun MainNavHost(
         ) {
             ProfileScreen(
                 onSignOut = { onNavigateToLogin() }
+            )
+        }
+        composable("PokemonListScreen") {
+            PokemonListScreen (
+                onPokemonNameClick = { pokemonName ->
+                    navController.navigate("PokemonDetailsScreen/${pokemonName}")
+                }
+            )
+        }
+        composable("HomeScreen") {
+            HomeScreen (
+                onNavigateToPokemonList = {navController.navigate("PokemonListScreen")}
             )
         }
     }

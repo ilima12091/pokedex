@@ -3,9 +3,15 @@ package com.example.pokedex.data
 import com.example.pokedex.api.PokemonClient
 import com.example.pokedex.api.responses.Chain
 import com.example.pokedex.api.responses.FetchPokemonDetailsResponse
+import com.example.pokedex.api.responses.PokemonListItem
 import com.example.pokedex.api.responses.Species
 
 object PokemonRepository {
+
+    suspend fun fetchPokemons(offset: Int = 0): List<PokemonListItem> {
+        return PokemonClient.service.fetchPokemons(offset = offset).results
+    }
+
     suspend fun fetchPokemonDetails(name: String): FetchPokemonDetailsResponse {
         return PokemonClient.service.fetchPokemonDetails(name)
     }
