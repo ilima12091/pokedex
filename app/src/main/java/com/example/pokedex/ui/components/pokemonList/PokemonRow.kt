@@ -27,7 +27,7 @@ import com.example.pokedex.ui.utils.getPokemonOrder
 import com.example.pokedex.ui.utils.getPokemonOrderFromUrl
 
 @Composable
-fun PokemonCard(
+fun PokemonRow(
     pokemon: PokemonListItem?,
     onClick: () -> Unit
 ) {
@@ -67,7 +67,7 @@ fun PokemonCard(
 @Preview
 @Composable
 fun PokemonCardPreview() {
-    PokemonCard(
+    PokemonRow(
         pokemon = PokemonListItem(
             name = "bulbasaur",
             url = "https://pokeapi.co/api/v2/pokemon/1/"

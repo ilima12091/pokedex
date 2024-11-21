@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex.ui.components.pokemonList.PokedexHeader
-import com.example.pokedex.ui.components.pokemonList.PokemonCard
+import com.example.pokedex.ui.components.pokemonList.PokemonRow
 import com.example.pokedex.ui.viewModels.PokemonViewModel
 
 @Composable
@@ -79,7 +79,7 @@ fun PokemonListScreen(
                         contentPadding = PaddingValues(bottom = 16.dp)
                     ) {
                         items(pokemons) { pokemon ->
-                            PokemonCard(
+                            PokemonRow(
                                 pokemon = pokemon,
                                 onClick = { onPokemonNameClick(pokemon.name) }
                             )
