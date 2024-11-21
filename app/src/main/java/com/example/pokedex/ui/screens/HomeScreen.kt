@@ -1,80 +1,57 @@
 package com.example.pokedex.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.foundation.layout.Column
+import com.example.pokedex.ui.components.PokemonCard
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-
-@Composable
-fun HomeTopBar(
-    onNavigateToPokemonList: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(WindowInsets.statusBars.asPaddingValues())
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = {}) {
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Go back",
-                Modifier.size(28.dp),
-                colorResource(id = android.R.color.white)
-            )
-        }
-        IconButton(onClick = {}) {
-            Icon(
-                Icons.Outlined.AccountCircle,
-                contentDescription = "AccountDetails",
-                Modifier.size(28.dp),
-                colorResource(id = android.R.color.white)
-            )
-        }
-        TextButton(
-            onClick = {
-                onNavigateToPokemonList()
-            },
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("See all pokemon", fontSize = 18.sp, color = Color.Red)
-            }
-        }
-    }
-}
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.pokedex.api.mappers.toTypeNames
+import com.example.pokedex.ui.components.HomeTopBar
+import com.example.pokedex.ui.viewModels.HomeViewModel
 
 @Composable
 fun HomeScreen(
-    onNavigateToPokemonList: () -> Unit,
-){
-    HomeTopBar(
-        onNavigateToPokemonList = onNavigateToPokemonList
-    )
+    viewModel: HomeViewModel = viewModel(),
+    onNavigateToPokemonList: () -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchPokemonDetailsForHome()
+    }
+
+    Column {
+        HomeTopBar(
+            onNavigateToPokemonList = onNavigateToPokemonList
+        )
+
+        if (uiState.isLoading) {
+//            CircularProgressIndicator(
+//                modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.Center)
+//            )
+        } else if (uiState.pokemonDetailsList.isNotEmpty()) {
+            LazyColumn {
+                items(uiState.pokemonDetailsList) { pokemon ->
+                    PokemonCard(
+                        name = pokemon.name,
+                        imageUrl = pokemon.sprites.frontDefault,
+                        types = pokemon.types.toTypeNames()
+                    )
+                }
+            }
+        } else if (uiState.errorMessage != null) {
+//            Text(
+//                text = uiState.errorMessage
+//            )
+        } else {
+            Text(
+                text = "No Pokémon available",
+            )
+        }
+    }
 }
-
-
-
