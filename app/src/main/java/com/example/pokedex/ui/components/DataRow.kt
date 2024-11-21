@@ -8,20 +8,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 
 @Composable
-fun PokemonDataRow(label: String, value: String) {
+fun DataRow(label: String, value: String, fontSize: TextUnit = 16.sp) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(text = label, color = Color.Gray)
-        Text(text = value)
+        Text(text = label, color = Color.Gray, fontSize = fontSize)
+        Text(text = value, fontSize = fontSize)
     }
 }
 
 @Preview
 @Composable
-fun PokemonDataRowPreview() {
-    PokemonDataRow("Height:", "7")
+fun DataRowPreview() {
+    DataRow("Height:", "7")
 }
