@@ -1,16 +1,13 @@
 package com.example.pokedex.ui.navigation
 
-import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.pokedex.AuthActivity
 import com.example.pokedex.ui.screens.HomeScreen
 import com.example.pokedex.ui.screens.PokemonDetailsScreen
 import com.example.pokedex.ui.screens.PokemonListScreen
@@ -22,6 +19,10 @@ fun MainNavHost(
     navController: NavHostController = rememberNavController(),
     onNavigateToLogin: () -> Unit,
 ) {
+    fun onGoBack() {
+        navController.popBackStack()
+    }
+
     NavHost(
         navController = navController,
         modifier = modifier,
@@ -39,7 +40,7 @@ fun MainNavHost(
                     navController.navigate("PokemonDetailsScreen/$pokemonId")
                 },
                 onGoBack = {
-                    navController.popBackStack()
+                    onGoBack()
                 }
             )
         }
@@ -51,15 +52,18 @@ fun MainNavHost(
             )
         }
         composable("PokemonListScreen") {
-            PokemonListScreen (
+            PokemonListScreen(
                 onPokemonNameClick = { pokemonName ->
                     navController.navigate("PokemonDetailsScreen/${pokemonName}")
+                },
+                onGoBack = {
+                    onGoBack()
                 }
             )
         }
         composable("HomeScreen") {
-            HomeScreen (
-                onNavigateToPokemonList = {navController.navigate("PokemonListScreen")}
+            HomeScreen(
+                onNavigateToPokemonList = { navController.navigate("PokemonListScreen") }
             )
         }
     }

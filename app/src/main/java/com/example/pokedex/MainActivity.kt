@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
                         val intent = Intent(this, AuthActivity::class.java)
                         startActivity(intent)
                         finish()
-                    },
+                    }
                 )
             }
         }
