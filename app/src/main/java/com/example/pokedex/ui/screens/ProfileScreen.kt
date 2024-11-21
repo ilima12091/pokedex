@@ -25,12 +25,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.pokedex.R
 import com.example.pokedex.ui.components.DataRow
+import com.example.pokedex.ui.viewModels.ProfileViewModel
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    viewModel: ProfileViewModel= viewModel(),
+    onSignOut: () -> Unit,
+) {
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
@@ -69,7 +74,10 @@ fun ProfileScreen() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     TextButton(
-                        onClick = { },
+                        onClick = {
+                            viewModel.signOut()
+                            onSignOut()
+                        },
                     ) {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -93,5 +101,5 @@ fun ProfileScreen() {
 @Preview(showBackground = true)
 @Composable
 fun ProfileScreenPreview() {
-    ProfileScreen()
+    ProfileScreen(onSignOut = {})
 }
