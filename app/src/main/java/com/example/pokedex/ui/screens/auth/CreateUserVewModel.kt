@@ -33,7 +33,8 @@ class CreateUserViewModel : ViewModel() {
                     val userDetails = mapOf(
                         "name" to name,
                         "lastName" to lastName,
-                        "email" to email
+                        "email" to email,
+                        "favorites" to emptyList<Map<String, Any>>(),
                     )
                     uid?.let {
                         firestore.collection("users").document(it).set(userDetails)
