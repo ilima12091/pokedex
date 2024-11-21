@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.pokedex.ui.screens.PokemonDetailsScreen
+import com.example.pokedex.ui.screens.ProfileScreen
 
 @Composable
 fun MainNavHost(
@@ -18,7 +19,7 @@ fun MainNavHost(
     NavHost(
         navController = navController,
         modifier = modifier,
-        startDestination = "PokemonDetailsScreen/4"
+        startDestination = "ProfileScreen"
     ) {
         composable(
             "PokemonDetailsScreen/{pokemonId}",
@@ -35,6 +36,11 @@ fun MainNavHost(
                     navController.popBackStack()
                 }
             )
+        }
+        composable(
+            "ProfileScreen"
+        ) {
+            ProfileScreen()
         }
     }
 }
