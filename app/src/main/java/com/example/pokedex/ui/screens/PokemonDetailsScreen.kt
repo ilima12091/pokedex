@@ -17,6 +17,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -62,6 +65,8 @@ fun PokemonDetailsScreen(
     val isLoading = uiState.isLoading
     val evolutionChain = uiState.evolutionChain
     val isLoadingEvolutionChain = uiState.isLoadingEvolutionChain
+    val isFavorite = uiState.isFavorite
+    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     val tabs = listOf("About", "Base Stats", "Evolution")
@@ -72,6 +77,13 @@ fun PokemonDetailsScreen(
         }
     )
     val selectedTabIndex = remember { derivedStateOf { pagerState.currentPage } }
+
+    LaunchedEffect(uiState.errorMessage) {
+        uiState.errorMessage?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            viewModel.clearErrorMessage()
+        }
+    }
 
     LaunchedEffect(pokemonId) {
         pokemonId.let {
@@ -90,7 +102,15 @@ fun PokemonDetailsScreen(
     Scaffold(
         topBar = {
             PokemonDetailsTopBar(
-                onGoBack = onGoBack
+                onGoBack = onGoBack,
+                onFavoriteClick = {
+                    viewModel.toggleFavorite(
+                        name = pokemonDetails?.name,
+                        sprite =  pokemonDetails?.sprites?.frontDefault,
+                        types = pokemonDetails?.types,
+                    )
+                },
+                isFavorite = isFavorite,
             )
         }
     ) { innerPadding ->
@@ -224,6 +244,16 @@ fun PokemonDetailsScreen(
                 }
             }
         }
+    }
+    SnackbarHost(
+        hostState = snackbarHostState,
+    ) { data ->
+        Snackbar(
+            snackbarData = data,
+            containerColor = Color(0xFFFFCDD2),
+            contentColor = Color.Black,
+            actionColor = Color(0xFFD32F2F),
+        )
     }
 }
 

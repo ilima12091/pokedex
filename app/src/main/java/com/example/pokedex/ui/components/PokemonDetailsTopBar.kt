@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,6 +23,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun PokemonDetailsTopBar(
+    isFavorite: Boolean,
+    onFavoriteClick: () -> Unit,
     onGoBack: () -> Unit = {},
 ) {
     Row(
@@ -42,10 +45,9 @@ fun PokemonDetailsTopBar(
                 colorResource(id = android.R.color.white)
             )
         }
-        IconButton(onClick = {}) {
+        IconButton(onClick = { onFavoriteClick() }) {
             Icon(
-                Icons.Outlined.FavoriteBorder,
-//                Icons.Outlined.Favorite,
+                imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                 contentDescription = "Favorite",
                 Modifier.size(28.dp),
                 colorResource(id = android.R.color.white)
@@ -57,5 +59,5 @@ fun PokemonDetailsTopBar(
 @Preview(showBackground = true)
 @Composable
 fun PokemonDetailsTopBarPreview() {
-    PokemonDetailsTopBar()
+    PokemonDetailsTopBar(isFavorite = false, onGoBack = {}, onFavoriteClick = {})
 }
