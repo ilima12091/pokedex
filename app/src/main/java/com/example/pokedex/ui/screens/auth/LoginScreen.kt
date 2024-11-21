@@ -1,7 +1,11 @@
 package com.example.pokedex.ui.screens.auth
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Snackbar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,15 +19,19 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.pokedex.ui.components.auth.LoginFooter
 import com.example.pokedex.ui.components.auth.LoginForm
-import com.example.pokedex.ui.components.auth.LoginHeader
+import com.example.pokedex.ui.components.auth.AuthHeader
 
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
     onLoginSuccess: () -> Unit,
-    viewModel: LoginViewModel = viewModel()
+    onNavigateToCreateUser: () -> Unit,
+    viewModel: LoginViewModel = viewModel(),
 ) {
     val (email, setEmail) = remember { mutableStateOf("") }
     val (password, setPassword) = remember { mutableStateOf("") }
@@ -31,22 +39,26 @@ fun LoginScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     Column(
-        modifier=modifier,
+        modifier = modifier
+            .background(color = Color(0xFFEEEEEE))
+            .fillMaxSize()
+        ,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        LoginHeader()
+        AuthHeader(
+            title = "Welcome to your Pokédex!",
+            subtitle = "Are you ready to catch'em all?",
+        )
         LoginForm(
             email=email,
             setEmail=setEmail,
             password=password,
             setPassword=setPassword,
             onLoginClick= { viewModel.login(email, password) },
+            isLoading = loginState is LoginState.Loading
         )
-    }
-
-    if (loginState is LoginState.Loading) {
-//        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-        Text(text="Loading...")
+        Spacer(modifier = Modifier.height(16.dp))
+        LoginFooter(onNavigateToCreateUser = onNavigateToCreateUser)
     }
 
     when (loginState) {
@@ -61,18 +73,25 @@ fun LoginScreen(
                 snackbarHostState.showSnackbar(errorMessage)
             }
         }
-        else -> {
-
-        }
+        else -> { }
     }
 
-    SnackbarHost(hostState = snackbarHostState)
+    SnackbarHost(
+        hostState = snackbarHostState,
+    ) { data ->
+        Snackbar(
+            snackbarData = data,
+            containerColor = Color(0xFFFFCDD2),
+            contentColor = Color.Black,
+            actionColor = Color(0xFFD32F2F),
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun LoginScreenPreview(modifier: Modifier = Modifier) {
     PokedexTheme {
-        LoginScreen(modifier=modifier, onLoginSuccess = {})
+        LoginScreen(modifier=modifier, onLoginSuccess = {}, onNavigateToCreateUser = {})
     }
 }

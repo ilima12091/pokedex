@@ -13,10 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.font.FontWeight
 import com.example.pokedex.R
-import androidx.compose.ui.unit.sp
 
 @Composable
 fun SplashScreenContent() {
@@ -27,19 +28,18 @@ fun SplashScreenContent() {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            // App Logo
             Icon(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                painter = painterResource(id = R.drawable.pokeball_icon),
                 contentDescription = "App Logo",
-                modifier = Modifier.size(100.dp),
-                tint = Color.Red
+                modifier = Modifier.size(200.dp),
+                tint = Color.Unspecified,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Pokedex",
-//                style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Bold),
+                text = "Pokédex",
+                style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
                 color = Color.Black
             )
         }
