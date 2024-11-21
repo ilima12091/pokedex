@@ -106,11 +106,18 @@ fun PokemonDetailsScreen(
                 onFavoriteClick = {
                     viewModel.toggleFavorite(
                         name = pokemonDetails?.name,
-                        sprite =  pokemonDetails?.sprites?.frontDefault,
+                        sprite = pokemonDetails?.sprites?.frontDefault,
                         types = pokemonDetails?.types,
                     )
                 },
                 isFavorite = isFavorite,
+                onSetAsProfilePictureClick = {
+                    viewModel.setProfilePicture(
+                        imageUrl = pokemonDetails?.sprites?.frontDefault ?: ""
+                    )
+                },
+                profilePictureUrl = uiState.profilePictureUrl,
+                pokemonImageUrl = pokemonDetails?.sprites?.frontDefault ?: ""
             )
         }
     ) { innerPadding ->

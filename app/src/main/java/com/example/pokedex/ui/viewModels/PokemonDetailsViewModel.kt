@@ -23,6 +23,7 @@ data class PokemonDetailsScreenUiState(
     val isLoadingEvolutionChain: Boolean = false,
     val isFavorite: Boolean = false,
     val errorMessage: String? = null,
+    val profilePictureUrl: String? = null
 )
 
 class PokemonDetailsViewModel : ViewModel() {
@@ -31,6 +32,24 @@ class PokemonDetailsViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(PokemonDetailsScreenUiState())
     val uiState = _uiState.asStateFlow()
+
+    fun setProfilePicture(imageUrl: String) {
+        val uid = firebaseAuth.currentUser?.uid ?: return
+        firestore.collection("users").document(uid)
+            .update("profilePictureUrl", imageUrl)
+            .addOnSuccessListener {
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = null,
+                    profilePictureUrl = imageUrl
+                )
+            }
+            .addOnFailureListener { exception ->
+                Log.e("SetProfilePicture", "Failed to set profile picture: ${exception.message}")
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = "Failed to set profile picture. Please try again."
+                )
+            }
+    }
 
     fun toggleFavorite(name: String?, sprite: String?, types: List<PokemonType>?) {
         val uid = firebaseAuth.currentUser?.uid ?: return
@@ -86,20 +105,29 @@ class PokemonDetailsViewModel : ViewModel() {
                 val uid = firebaseAuth.currentUser?.uid
                 val isFavorite = if (uid != null) {
                     val document = firestore.collection("users").document(uid).get().await()
-                    val favorites = (document.get("favorites") as? List<*>)?.mapNotNull { favorite ->
-                        (favorite as? Map<*, *>)?.filterKeys { it is String }?.mapKeys { it.key as String }
-                    } ?: emptyList()
+                    val favorites =
+                        (document.get("favorites") as? List<*>)?.mapNotNull { favorite ->
+                            (favorite as? Map<*, *>)?.filterKeys { it is String }
+                                ?.mapKeys { it.key as String }
+                        } ?: emptyList()
 
                     favorites.any { it["name"] == pokemonDetails.name }
                 } else {
                     false
+                }
+                val profilePictureUrl = if (uid != null) {
+                    val document = firestore.collection("users").document(uid).get().await()
+                    document.getString("profilePictureUrl")
+                } else {
+                    null
                 }
 
                 _uiState.update {
                     it.copy(
                         pokemonDetails = pokemonDetails,
                         isFavorite = isFavorite,
-                        isLoading = false
+                        isLoading = false,
+                        profilePictureUrl = profilePictureUrl
                     )
                 }
             } catch (e: Exception) {
