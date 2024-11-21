@@ -1,13 +1,16 @@
 package com.example.pokedex.ui.navigation
 
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.pokedex.AuthActivity
 import com.example.pokedex.ui.screens.PokemonDetailsScreen
 import com.example.pokedex.ui.screens.ProfileScreen
 
@@ -15,6 +18,7 @@ import com.example.pokedex.ui.screens.ProfileScreen
 fun MainNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
+    onNavigateToLogin: () -> Unit,
 ) {
     NavHost(
         navController = navController,
@@ -40,7 +44,9 @@ fun MainNavHost(
         composable(
             "ProfileScreen"
         ) {
-            ProfileScreen()
+            ProfileScreen(
+                onSignOut = { onNavigateToLogin() }
+            )
         }
     }
 }
