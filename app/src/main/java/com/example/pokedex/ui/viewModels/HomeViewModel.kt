@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex.api.responses.FetchPokemonDetailsResponse
 import com.example.pokedex.data.PokemonRepository
+import com.example.pokedex.ui.utils.getPokemonIdsForHomeScreen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.async
@@ -13,7 +14,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 data class HomeUiState(
     val isLoading: Boolean = false,
@@ -31,6 +31,7 @@ class HomeViewModel: ViewModel() {
     fun clearErrorMessage() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
     }
+
     fun fetchPokemonDetailsForHome() {
         _uiState.update {
             it.copy(isLoading = true)
@@ -38,11 +39,12 @@ class HomeViewModel: ViewModel() {
 
         viewModelScope.launch {
             try {
-                val pokemonOrder = (1..20).map { it.toString() }
+                val pokemonIds = getPokemonIdsForHomeScreen()
+                Log.d("fetchPokemonDetailsForHome", "Fetching details for Pokémon IDs: $pokemonIds")
 
-                val pokemonDetailsList = pokemonOrder.map { name ->
+                val pokemonDetailsList = pokemonIds.map { id ->
                     async {
-                        PokemonRepository.fetchPokemonDetails(name)
+                        PokemonRepository.fetchPokemonDetails(id)
                     }
                 }.awaitAll()
 
