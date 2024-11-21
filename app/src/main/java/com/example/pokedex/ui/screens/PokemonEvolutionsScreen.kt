@@ -32,7 +32,8 @@ import com.example.pokedex.ui.utils.capitalizeString
 fun PokemonEvolutionsScreen(
     isLoadingEvolutionChain: Boolean,
     evolutionChain: List<Species>?,
-    pokemonDetails: FetchPokemonDetailsResponse?
+    pokemonDetails: FetchPokemonDetailsResponse?,
+    onNavigateToPokemon: (String) -> Unit
 ) {
     if (isLoadingEvolutionChain) {
         Column(
@@ -61,7 +62,9 @@ fun PokemonEvolutionsScreen(
                                 RoundedCornerShape(8.dp)
                             )
                             .clickable {
-
+                                if (species.name != pokemonDetails?.name) {
+                                    onNavigateToPokemon(species.name)
+                                }
                             }
                             .background(
                                 color = if (species.name == pokemonDetails?.name) {

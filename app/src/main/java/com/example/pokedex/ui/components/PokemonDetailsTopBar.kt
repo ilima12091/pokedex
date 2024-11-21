@@ -21,7 +21,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun PokemonDetailsTopBar() {
+fun PokemonDetailsTopBar(
+    onGoBack: () -> Unit = {},
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -30,7 +32,9 @@ fun PokemonDetailsTopBar() {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = {}) {
+        IconButton(onClick = {
+            onGoBack()
+        }) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Go back",

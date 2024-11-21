@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class PokemonDetailsScreenUiState(
-    val selectedTabIndex: Int = 0,
     val pokemonDetails: FetchPokemonDetailsResponse? = null,
     val isLoading: Boolean = false,
     val evolutionChain: List<Species>? = null,
@@ -21,10 +20,6 @@ data class PokemonDetailsScreenUiState(
 class PokemonDetailsViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(PokemonDetailsScreenUiState())
     val uiState = _uiState.asStateFlow()
-
-    fun setSelectedTabIndex(index: Int) {
-        _uiState.value = _uiState.value.copy(selectedTabIndex = index)
-    }
 
     fun fetchPokemonDetails(name: String) {
         _uiState.update {
