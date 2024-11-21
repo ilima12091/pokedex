@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.pokedex.ui.screens.HomeScreen
+import com.example.pokedex.ui.screens.PokemonDetailsScreen
+import com.example.pokedex.ui.screens.PokemonListScreen
 
 
 @Composable
@@ -16,7 +18,7 @@ fun OurNavHost(
 ) {
     NavHost(navController, startDestination, modifier = modifier) {
         composable("PokemonListScreen") {
-            HomeScreen (
+            PokemonListScreen (
                 onPokemonNameClick = { pokemonName ->
                     navController.navigate("PokemonDetailsScreen/${pokemonName}")
                 }
@@ -24,7 +26,7 @@ fun OurNavHost(
         }
         composable("PokemonDetailsScreen/{pokemonName}") { backStackEntry ->
             val pokemonName = backStackEntry.arguments?.getString("pokemonName")
-            pokemonName?.let { PokemonDetailsScreen(pokemonName= it, navController = navController) }
+            pokemonName?.let { PokemonDetailsScreen(pokemonId= it, navController = navController) }
         }
     }
 }
