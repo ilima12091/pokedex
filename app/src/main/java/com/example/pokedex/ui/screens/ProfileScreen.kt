@@ -38,12 +38,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.pokedex.R
 import com.example.pokedex.ui.components.DataRow
-import com.example.pokedex.ui.screens.auth.LoginState
 import com.example.pokedex.ui.viewModels.ProfileViewModel
 
 @Composable
 fun ProfileScreen(
-    viewModel: ProfileViewModel= viewModel(),
+    viewModel: ProfileViewModel = viewModel(),
     onSignOut: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -89,10 +88,11 @@ fun ProfileScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         AsyncImage(
-                            model = "https://i.pinimg.com/originals/32/eb/23/32eb230b326ee3c76e64f619a06f6ebb.png",
+                            model = uiState.profilePictureUrl ?: "",
                             contentDescription = "Profile Picture",
                             placeholder = painterResource(R.drawable.pokeball_icon),
-                            modifier = Modifier.size(200.dp)
+                            modifier = Modifier.size(200.dp),
+                            error = painterResource(R.drawable.pokeball_icon)
                         )
                     }
                     Column(
@@ -104,8 +104,8 @@ fun ProfileScreen(
                         verticalArrangement = Arrangement.spacedBy(24.dp)
                     ) {
                         DataRow("Name:", uiState.name ?: "N/A", fontSize = 20.sp)
-                        DataRow("Surname:", uiState.lastName?: "N/A", fontSize = 20.sp)
-                        DataRow("Email:", uiState.email?: "N/A", fontSize = 20.sp)
+                        DataRow("Surname:", uiState.lastName ?: "N/A", fontSize = 20.sp)
+                        DataRow("Email:", uiState.email ?: "N/A", fontSize = 20.sp)
                         Column(
                             Modifier.fillMaxSize(),
                             verticalArrangement = Arrangement.Bottom,
