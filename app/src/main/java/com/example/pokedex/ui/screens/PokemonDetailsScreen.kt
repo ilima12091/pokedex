@@ -106,25 +106,27 @@ fun PokemonDetailsScreen(
 
     Scaffold(
         topBar = {
-            PokemonDetailsTopBar(
-                onGoBack = onGoBack,
-                onFavoriteClick = {
-                    viewModel.toggleFavorite(
-                        name = pokemonDetails?.name ?: "N/A",
-                        sprite = pokemonDetails?.sprites?.frontDefault ?: "N/A",
-                        types = pokemonDetails?.types ?: emptyList(),
-                        id = pokemonDetails?.id.toString(),
-                    )
-                },
-                isFavorite = isFavorite,
-                onSetAsProfilePictureClick = {
-                    viewModel.setProfilePicture(
-                        imageUrl = pokemonDetails?.sprites?.frontDefault ?: ""
-                    )
-                },
-                profilePictureUrl = uiState.profilePictureUrl,
-                pokemonImageUrl = pokemonDetails?.sprites?.frontDefault ?: ""
-            )
+            if (!isLoading) {
+                PokemonDetailsTopBar(
+                    onGoBack = onGoBack,
+                    onFavoriteClick = {
+                        viewModel.toggleFavorite(
+                            name = pokemonDetails?.name ?: "N/A",
+                            sprite = pokemonDetails?.sprites?.frontDefault ?: "N/A",
+                            types = pokemonDetails?.types ?: emptyList(),
+                            id = pokemonDetails?.id.toString(),
+                        )
+                    },
+                    isFavorite = isFavorite,
+                    onSetAsProfilePictureClick = {
+                        viewModel.setProfilePicture(
+                            imageUrl = pokemonDetails?.sprites?.frontDefault ?: ""
+                        )
+                    },
+                    profilePictureUrl = uiState.profilePictureUrl,
+                    pokemonImageUrl = pokemonDetails?.sprites?.frontDefault ?: ""
+                )
+            }
         }
     ) { innerPadding ->
         if (isLoading) {
