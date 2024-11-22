@@ -38,12 +38,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.pokedex.R
 import com.example.pokedex.ui.components.DataRow
+import com.example.pokedex.ui.components.profile.ProfileHeader
 import com.example.pokedex.ui.viewModels.ProfileViewModel
 
 @Composable
 fun ProfileScreen(
     viewModel: ProfileViewModel = viewModel(),
     onSignOut: () -> Unit,
+    onGoBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -76,11 +78,13 @@ fun ProfileScreen(
             Scaffold { innerPadding ->
                 Column(
                     modifier = Modifier
-                        .background(Color.LightGray)
                         .padding(top = innerPadding.calculateTopPadding())
                         .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    ProfileHeader(
+                        onGoBack = onGoBack
+                    )
                     Column(
                         modifier = Modifier
                             .padding(vertical = 64.dp)
@@ -151,5 +155,5 @@ fun ProfileScreen(
 @Preview(showBackground = true)
 @Composable
 fun ProfileScreenPreview() {
-    ProfileScreen(onSignOut = {})
+    ProfileScreen(onSignOut = {}, onGoBack = {})
 }
