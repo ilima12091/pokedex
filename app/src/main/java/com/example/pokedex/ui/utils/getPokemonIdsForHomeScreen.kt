@@ -1,11 +1,11 @@
 package com.example.pokedex.ui.utils
 
 fun getPokemonIdsForHomeScreen(
-    favoriteOrders: List<Any> = emptyList(),
+    favoriteOrders: List<String> = emptyList(),
     totalToShow: Int = 20
 ): List<String> {
     val allOrders = (1..1000).toList()
-    val nonFavoriteOrders = allOrders.filterNot { it in favoriteOrders }
+    val nonFavoriteOrders = allOrders.filterNot { it in favoriteOrders.map{ it.toInt() } }
 
     return (favoriteOrders
         .distinct()

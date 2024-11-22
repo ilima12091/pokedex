@@ -56,12 +56,12 @@ class HomeViewModel: ViewModel() {
                 } ?: emptyList()
                 Log.d("fetchPokemonDetailsForHome", "Favorites are: $favorites")
 
-                val favoriteOrders = favorites.mapNotNull { it["id"] }
+                val favoriteOrders = favorites.mapNotNull { it["id"].toString() }
                 Log.d("fetchPokemonDetailsForHome", "Favorite Pokémon orders: $favoriteOrders")
 
                 viewModelScope.launch {
                     try {
-                        val pokemonIds = getPokemonIdsForHomeScreen(favoriteOrders =favoriteOrders)
+                        val pokemonIds = getPokemonIdsForHomeScreen(favoriteOrders = favoriteOrders)
                         Log.d("fetchPokemonDetailsForHome", "Fetching details for Pokémon IDs: $pokemonIds")
 
                         val pokemonDetailsList = pokemonIds.map { id ->
