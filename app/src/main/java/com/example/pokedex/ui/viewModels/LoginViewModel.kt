@@ -5,12 +5,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex.data.FirebaseAuthRepository
 import com.example.pokedex.ui.utils.Constants
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel() : ViewModel() {
-    private val firebaseAuthRepository = FirebaseAuthRepository()
+
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val firebaseAuthRepository: FirebaseAuthRepository,
+) : ViewModel() {
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState: StateFlow<LoginState> = _loginState
 

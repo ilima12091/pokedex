@@ -2,9 +2,7 @@ package com.example.pokedex.ui.screens.auth
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -18,7 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex.ui.components.auth.CreateUserForm
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,12 +23,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pokedex.ui.components.auth.AuthHeader
 import com.example.pokedex.ui.theme.AuthBackgroundColor
 import com.example.pokedex.ui.theme.SnackbarActionColor
@@ -45,7 +39,7 @@ fun CreateUserScreen(
     modifier: Modifier = Modifier,
     onUserCreated: () -> Unit,
     onBackToLogin: () -> Unit,
-    viewModel: CreateUserViewModel = viewModel()
+    viewModel: CreateUserViewModel = hiltViewModel(),
 ) {
     val (email, setEmail) = remember { mutableStateOf("") }
     val (password, setPassword) = remember { mutableStateOf("") }
