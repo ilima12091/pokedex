@@ -42,7 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.example.pokedex.R
 import com.example.pokedex.ui.components.PokemonDetailsTopBar
@@ -59,7 +59,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun PokemonDetailsScreen(
     modifier: Modifier = Modifier,
-    viewModel: PokemonDetailsViewModel = viewModel(),
+    viewModel: PokemonDetailsViewModel = hiltViewModel(),
     pokemonId: String = "charmeleon",
     onNavigateToPokemon: (String) -> Unit = {},
     onGoBack: () -> Unit = {}
@@ -72,7 +72,6 @@ fun PokemonDetailsScreen(
     val isFavorite = uiState.isFavorite
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     val tabs = listOf("About", "Base Stats", "Evolution")
 
