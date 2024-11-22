@@ -1,7 +1,7 @@
 package com.example.pokedex.ui.utils
 
 fun getPokemonIdsForHomeScreen(
-    favoriteOrders: List<Int> = emptyList(),
+    favoriteOrders: List<Any> = emptyList(),
     totalToShow: Int = 20
 ): List<String> {
     val allOrders = (1..1000).toList()
