@@ -2,13 +2,14 @@ package com.example.pokedex.ui.screens.auth
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
+import androidx.lifecycle.viewModelScope
+import com.example.pokedex.data.FirebaseAuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-class LoginViewModel : ViewModel() {
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-
+class LoginViewModel() : ViewModel() {
+    private val firebaseAuthRepository = FirebaseAuthRepository()
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState: StateFlow<LoginState> = _loginState
 
@@ -19,17 +20,24 @@ class LoginViewModel : ViewModel() {
         }
 
         _loginState.value = LoginState.Loading
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    _loginState.value = LoginState.Success
-                } else {
-                    val errorMessage = task.exception?.message ?: "Unknown error"
-                    Log.e("LoginViewModel", "Login failed: $errorMessage")
 
+        viewModelScope.launch {
+            val result = firebaseAuthRepository.login(email, password)
+            result.fold(
+                onSuccess = { user ->
+                    if (user != null) {
+                        _loginState.value = LoginState.Success
+                    } else {
+                        Log.e("LoginViewModel", "Login failed: User is null")
+                        _loginState.value = LoginState.Error("Login failed. Please try again.")
+                    }
+                },
+                onFailure = { exception ->
+                    Log.e("LoginViewModel", "Login failed: ${exception.message}")
                     _loginState.value = LoginState.Error("Invalid email or password. Please try again.")
                 }
-            }
+            )
+        }
     }
 }
 

@@ -1,15 +1,17 @@
 package com.example.pokedex.ui.screens.auth
 
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.lifecycle.viewModelScope
+import com.example.pokedex.data.FirebaseAuthRepository
+import com.example.pokedex.data.FirestoreUserRepository
+import com.example.pokedex.data.models.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class CreateUserViewModel : ViewModel() {
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-
+    private val firebaseAuthRepository = FirebaseAuthRepository()
+    private val firestoreUserRepository = FirestoreUserRepository()
     private val _createUserState = MutableStateFlow<CreateUserState>(CreateUserState.Idle)
     val createUserState: StateFlow<CreateUserState> = _createUserState
 
@@ -26,42 +28,47 @@ class CreateUserViewModel : ViewModel() {
 
         _createUserState.value = CreateUserState.Loading
 
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val uid = firebaseAuth.currentUser?.uid
-                    val userDetails = mapOf(
-                        "name" to name,
-                        "lastName" to lastName,
-                        "email" to email,
-                        "favorites" to emptyList<Map<String, Any>>(),
-                    )
-                    uid?.let {
-                        firestore.collection("users").document(it).set(userDetails)
-                            .addOnSuccessListener {
+        viewModelScope.launch {
+            firebaseAuthRepository.register(email, password).fold(
+                onSuccess = { user ->
+                    val uid = user?.uid
+                    if (uid != null) {
+                        val userDetails = User(
+                            name = name,
+                            lastName = lastName,
+                            email = email,
+                            favorites = emptyList()
+                        )
+                        firestoreUserRepository.saveUser(uid, userDetails).fold(
+                            onSuccess = {
                                 loginAfterCreation(email, password)
+                            },
+                            onFailure = { exception ->
+                                _createUserState.value = CreateUserState.Error(exception.message ?: "Failed to save user details")
                             }
-                            .addOnFailureListener { e ->
-                                _createUserState.value = CreateUserState.Error(e.message ?: "Failed to save user details")
-                            }
+                        )
+                    } else {
+                        _createUserState.value = CreateUserState.Error("Failed to retrieve user ID")
                     }
-                } else {
-                    val errorMessage = task.exception?.message ?: "Unknown error occurred"
-                    _createUserState.value = CreateUserState.Error(errorMessage)
+                },
+                onFailure = { exception ->
+                    _createUserState.value = CreateUserState.Error(exception.message ?: "Failed to create account")
                 }
-            }
+            )
+        }
     }
 
     private fun loginAfterCreation(email: String, password: String) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+        viewModelScope.launch {
+            firebaseAuthRepository.login(email, password).fold(
+                onSuccess = {
                     _createUserState.value = CreateUserState.Success
-                } else {
-                    val errorMessage = task.exception?.message ?: "Failed to log in after account creation"
-                    _createUserState.value = CreateUserState.Error(errorMessage)
+                },
+                onFailure = { exception ->
+                    _createUserState.value = CreateUserState.Error(exception.message ?: "Failed to log in after account creation")
                 }
-            }
+            )
+        }
     }
 }
 
