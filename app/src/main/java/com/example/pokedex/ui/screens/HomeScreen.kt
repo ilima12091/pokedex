@@ -18,7 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pokedex.api.mappers.toTypeNames
 import com.example.pokedex.ui.components.HomeTopBar
 import com.example.pokedex.ui.components.PokemonCard
@@ -26,7 +26,7 @@ import com.example.pokedex.ui.viewModels.HomeViewModel
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = viewModel(),
+    viewModel: HomeViewModel = hiltViewModel(),
     onNavigateToPokemonList: () -> Unit,
     onNavigateToProfile: () -> Unit,
     onPokemonClick: (String) -> Unit,

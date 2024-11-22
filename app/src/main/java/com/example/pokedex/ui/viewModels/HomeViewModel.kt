@@ -9,12 +9,14 @@ import com.example.pokedex.data.FirestoreUserRepository
 import com.example.pokedex.data.PokemonRepository
 import com.example.pokedex.ui.utils.Constants
 import com.example.pokedex.ui.utils.getPokemonIdsForHomeScreen
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class HomeUiState(
     val isLoading: Boolean = false,
@@ -22,9 +24,11 @@ data class HomeUiState(
     val pokemonDetailsList: List<FetchPokemonDetailsResponse> = emptyList()
 )
 
-class HomeViewModel: ViewModel() {
-    private val firebaseAuthRepository = FirebaseAuthRepository()
-    private val firestoreUserRepository = FirestoreUserRepository()
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val firebaseAuthRepository: FirebaseAuthRepository,
+    private val firestoreUserRepository: FirestoreUserRepository
+) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
