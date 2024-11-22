@@ -48,7 +48,10 @@ fun MainNavHost(
             "ProfileScreen"
         ) {
             ProfileScreen(
-                onSignOut = { onNavigateToLogin() }
+                onSignOut = { onNavigateToLogin() },
+                onGoBack = {
+                    onGoBack()
+                }
             )
         }
         composable("PokemonListScreen") {
@@ -63,7 +66,11 @@ fun MainNavHost(
         }
         composable("HomeScreen") {
             HomeScreen(
-                onNavigateToPokemonList = { navController.navigate("PokemonListScreen") }
+                onNavigateToPokemonList = { navController.navigate("PokemonListScreen") },
+                onNavigateToProfile = { navController.navigate("ProfileScreen") },
+                onPokemonClick = { pokemonName: String ->
+                    navController.navigate("PokemonDetailsScreen/${pokemonName}")
+                },
             )
         }
     }
