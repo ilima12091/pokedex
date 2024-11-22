@@ -1,4 +1,4 @@
-package com.example.pokedex.ui.screens.auth
+package com.example.pokedex.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -44,7 +44,9 @@ class CreateUserViewModel : ViewModel() {
                                 loginAfterCreation(email, password)
                             },
                             onFailure = { exception ->
-                                _createUserState.value = CreateUserState.Error(exception.message ?: "Failed to save user details")
+                                _createUserState.value = CreateUserState.Error(
+                                    exception.message ?: "Failed to save user details"
+                                )
                             }
                         )
                     } else {
@@ -52,7 +54,8 @@ class CreateUserViewModel : ViewModel() {
                     }
                 },
                 onFailure = { exception ->
-                    _createUserState.value = CreateUserState.Error(exception.message ?: "Failed to create account")
+                    _createUserState.value =
+                        CreateUserState.Error(exception.message ?: "Failed to create account")
                 }
             )
         }
@@ -65,7 +68,9 @@ class CreateUserViewModel : ViewModel() {
                     _createUserState.value = CreateUserState.Success
                 },
                 onFailure = { exception ->
-                    _createUserState.value = CreateUserState.Error(exception.message ?: "Failed to log in after account creation")
+                    _createUserState.value = CreateUserState.Error(
+                        exception.message ?: "Failed to log in after account creation"
+                    )
                 }
             )
         }

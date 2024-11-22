@@ -1,5 +1,6 @@
 package com.example.pokedex.data
 
+import android.util.Log
 import com.example.pokedex.api.FirestoreClient
 import com.example.pokedex.data.models.FavoritePokemon
 import com.example.pokedex.data.models.User
@@ -36,8 +37,10 @@ class FirestoreUserRepository : UserRepository {
         return try {
             val document = usersCollection.document(uid).get().await()
             val favorites = document.toObject(User::class.java)?.favorites ?: emptyList()
+            Log.d("FirestoreRepository", "favorites is: $favorites")
             Result.success(favorites)
         } catch (e: Exception) {
+            Log.e("FirestoreRepository", "Error fetching favorites for user $uid: ${e.message}", e)
             Result.failure(e)
         }
     }

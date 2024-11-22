@@ -1,4 +1,4 @@
-package com.example.pokedex.ui.screens.auth
+package com.example.pokedex.ui.viewModels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -34,7 +34,8 @@ class LoginViewModel() : ViewModel() {
                 },
                 onFailure = { exception ->
                     Log.e("LoginViewModel", "Login failed: ${exception.message}")
-                    _loginState.value = LoginState.Error("Invalid email or password. Please try again.")
+                    _loginState.value =
+                        LoginState.Error("Invalid email or password. Please try again.")
                 }
             )
         }

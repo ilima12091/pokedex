@@ -25,6 +25,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex.ui.components.auth.LoginFooter
 import com.example.pokedex.ui.components.auth.LoginForm
 import com.example.pokedex.ui.components.auth.AuthHeader
+import com.example.pokedex.ui.viewModels.LoginState
+import com.example.pokedex.ui.viewModels.LoginViewModel
 
 @Composable
 fun LoginScreen(
