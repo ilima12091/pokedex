@@ -16,8 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.pokedex.ui.theme.SemiTransparentWhite
+import com.example.pokedex.ui.utils.capitalizeString
 
 @Composable
 fun HomeTopBar(
@@ -50,7 +53,16 @@ fun HomeTopBar(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("See all pokemon", fontSize = 18.sp, color = Color.Red)
+                TextChip(
+                    text = "See all Pokémon",
+                    color = SemiTransparentWhite,
+                    textColor = Color.Black,
+                    modifier = Modifier
+                        .defaultMinSize(minWidth = 100.dp),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 18.sp,
+
+                )
             }
         }
     }

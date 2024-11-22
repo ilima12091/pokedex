@@ -25,6 +25,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex.ui.components.auth.LoginFooter
 import com.example.pokedex.ui.components.auth.LoginForm
 import com.example.pokedex.ui.components.auth.AuthHeader
+import com.example.pokedex.ui.theme.AuthBackgroundColor
+import com.example.pokedex.ui.theme.SnackbarActionColor
+import com.example.pokedex.ui.theme.SnackbarContainerColor
 import com.example.pokedex.ui.viewModels.LoginState
 import com.example.pokedex.ui.viewModels.LoginViewModel
 
@@ -42,7 +45,7 @@ fun LoginScreen(
 
     Column(
         modifier = modifier
-            .background(color = Color(0xFFEEEEEE))
+            .background(color = AuthBackgroundColor)
             .fillMaxSize()
         ,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -84,9 +87,9 @@ fun LoginScreen(
     ) { data ->
         Snackbar(
             snackbarData = data,
-            containerColor = Color(0xFFFFCDD2),
+            containerColor = SnackbarContainerColor,
             contentColor = Color.Black,
-            actionColor = Color(0xFFD32F2F),
+            actionColor = SnackbarActionColor,
         )
     }
 }

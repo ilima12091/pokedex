@@ -18,13 +18,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import com.example.pokedex.R
+import com.example.pokedex.ui.theme.AuthBackgroundColor
 
 @Composable
 fun SplashScreenContent() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFEEEEEE)),
+            .background(AuthBackgroundColor),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {

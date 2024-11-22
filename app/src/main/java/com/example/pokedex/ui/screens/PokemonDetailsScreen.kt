@@ -46,6 +46,9 @@ import coil3.compose.AsyncImage
 import com.example.pokedex.R
 import com.example.pokedex.ui.components.PokemonDetailsTopBar
 import com.example.pokedex.ui.components.TextChip
+import com.example.pokedex.ui.theme.SemiTransparentWhite
+import com.example.pokedex.ui.theme.SnackbarActionColor
+import com.example.pokedex.ui.theme.SnackbarContainerColor
 import com.example.pokedex.ui.utils.capitalizeString
 import com.example.pokedex.ui.utils.getColorFromType
 import com.example.pokedex.ui.utils.getPokemonOrder
@@ -166,7 +169,7 @@ fun PokemonDetailsScreen(
                             items(pokemonDetails?.types ?: emptyList()) {
                                 TextChip(
                                     text = capitalizeString(it.type.name),
-                                    color = Color(0x80FFFFFF),
+                                    color = SemiTransparentWhite,
                                     modifier = Modifier
                                         .defaultMinSize(minWidth = 100.dp),
                                     fontWeight = FontWeight.SemiBold
@@ -258,9 +261,9 @@ fun PokemonDetailsScreen(
     ) { data ->
         Snackbar(
             snackbarData = data,
-            containerColor = Color(0xFFFFCDD2),
+            containerColor = SnackbarContainerColor,
             contentColor = Color.Black,
-            actionColor = Color(0xFFD32F2F),
+            actionColor = SnackbarActionColor,
         )
     }
 }

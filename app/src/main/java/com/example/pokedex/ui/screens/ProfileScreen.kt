@@ -39,6 +39,9 @@ import coil3.compose.AsyncImage
 import com.example.pokedex.R
 import com.example.pokedex.ui.components.DataRow
 import com.example.pokedex.ui.components.profile.ProfileHeader
+import com.example.pokedex.ui.theme.SnackbarActionColor
+import com.example.pokedex.ui.theme.SnackbarContainerColor
+import com.example.pokedex.ui.utils.Constants
 import com.example.pokedex.ui.viewModels.ProfileViewModel
 
 @Composable
@@ -68,7 +71,7 @@ fun ProfileScreen(
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(48.dp),
+                    modifier = Modifier.size(Constants.UiConstants.LOADING_INDICATOR_SIZE.dp),
                     strokeWidth = 4.dp
                 )
             }
@@ -145,9 +148,9 @@ fun ProfileScreen(
     ) { data ->
         Snackbar(
             snackbarData = data,
-            containerColor = Color(0xFFFFCDD2),
+            containerColor = SnackbarContainerColor,
             contentColor = Color.Black,
-            actionColor = Color(0xFFD32F2F),
+            actionColor = SnackbarActionColor,
         )
     }
 }

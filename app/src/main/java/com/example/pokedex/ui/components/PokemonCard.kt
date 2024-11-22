@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImage
+import com.example.pokedex.ui.theme.SemiTransparentWhite
 import com.example.pokedex.ui.utils.capitalizeString
 import com.example.pokedex.ui.utils.getColorFromType
 
@@ -57,7 +58,7 @@ fun PokemonCard(
                 items(types) { type ->
                     TextChip(
                         text = capitalizeString(type),
-                        color = Color(0x80FFFFFF),
+                        color = SemiTransparentWhite,
                         fontSize = 14.sp,
                         verticalPadding = 2.dp,
                         horizontalPadding = 8.dp
