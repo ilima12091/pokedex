@@ -53,7 +53,7 @@ fun HomeTopBar(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TextChip(
-                    text = "Search Pokémon",
+                    text = "Search Pokemon",
                     color = SemiTransparentWhite,
                     textColor = Color.Black,
                     modifier = Modifier

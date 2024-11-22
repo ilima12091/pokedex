@@ -8,6 +8,10 @@ import com.example.pokedex.api.responses.Species
 
 object PokemonRepository {
 
+    suspend fun fetchAllPokemons(): List<PokemonListItem> {
+        return PokemonClient.service.fetchAllPokemons().results
+    }
+
     suspend fun fetchPokemons(offset: Int = 0): List<PokemonListItem> {
         return PokemonClient.service.fetchPokemons(offset = offset).results
     }
