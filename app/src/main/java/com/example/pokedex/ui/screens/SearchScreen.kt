@@ -26,16 +26,16 @@ import com.example.pokedex.ui.components.pokemonList.PokemonRow
 import com.example.pokedex.ui.viewModels.PokemonViewModel
 
 @Composable
-fun PokemonListScreen(
+fun SearchScreen(
     modifier: Modifier = Modifier,
     viewModel: PokemonViewModel = viewModel(),
-    onPokemonNameClick: (String) -> Unit,
+    onPokemonNameClick: (String) -> Unit, //para el details
     onGoBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     val isLoading = uiState.isLoading
-    val pokemons = uiState.pokemonList
+    val pokemons = uiState.pokemonList //cambiar???
 
     val listState = rememberLazyListState()
     val buffer = 4

@@ -12,6 +12,7 @@ import com.example.pokedex.ui.screens.HomeScreen
 import com.example.pokedex.ui.screens.PokemonDetailsScreen
 import com.example.pokedex.ui.screens.PokemonListScreen
 import com.example.pokedex.ui.screens.ProfileScreen
+import com.example.pokedex.ui.screens.SearchScreen
 
 @Composable
 fun MainNavHost(
@@ -67,10 +68,21 @@ fun MainNavHost(
         composable("HomeScreen") {
             HomeScreen(
                 onNavigateToPokemonList = { navController.navigate("PokemonListScreen") },
+                onNavigateToSearch = { navController.navigate("SerchScreen") },
                 onNavigateToProfile = { navController.navigate("ProfileScreen") },
                 onPokemonClick = { pokemonName: String ->
                     navController.navigate("PokemonDetailsScreen/${pokemonName}")
                 },
+            )
+        }
+        composable("SerchScreen") {
+            SearchScreen(
+                onPokemonNameClick = { pokemonName ->
+                    navController.navigate("PokemonDetailsScreen/${pokemonName}")
+                },
+                onGoBack = {
+                    onGoBack()
+                }
             )
         }
     }
