@@ -38,23 +38,34 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.pokedex.ui.theme.ContainerColor
+import com.example.pokedex.ui.theme.ContentColor
+import com.example.pokedex.ui.theme.DisabledContainerColor
+import com.example.pokedex.ui.theme.DisabledContentColor
+import com.example.pokedex.ui.theme.ErrorColor
+import com.example.pokedex.ui.theme.FocusedPlaceholderColor
+import com.example.pokedex.ui.theme.PrimaryTextColor
+import com.example.pokedex.ui.theme.SuccessColor
+import com.example.pokedex.ui.theme.TextFieldContainerColor
+import com.example.pokedex.ui.theme.TransparentIndicatorColor
+import com.example.pokedex.ui.theme.UnfocusedPlaceholderColor
 
 val TextFieldModifier = Modifier
     .fillMaxWidth()
-    .height(64.dp)
+    .height(68.dp)
     .padding(horizontal = 32.dp, vertical = 6.dp)
 
 @Composable
 fun textFieldColors(): TextFieldColors {
     return TextFieldDefaults.colors(
-        focusedContainerColor = Color.White,
-        unfocusedContainerColor = Color.White,
-        focusedTextColor = Color(0xFF333333),
-        unfocusedTextColor = Color(0xFF333333),
-        focusedIndicatorColor = Color.Transparent,
-        unfocusedIndicatorColor = Color.Transparent,
-        focusedPlaceholderColor = Color(0xFFAAAAAA),
-        unfocusedPlaceholderColor = Color(0xFFCCCCCC)
+        focusedContainerColor = TextFieldContainerColor,
+        unfocusedContainerColor = TextFieldContainerColor,
+        focusedTextColor = PrimaryTextColor,
+        unfocusedTextColor = PrimaryTextColor,
+        focusedIndicatorColor = TransparentIndicatorColor,
+        unfocusedIndicatorColor = TransparentIndicatorColor,
+        focusedPlaceholderColor = FocusedPlaceholderColor,
+        unfocusedPlaceholderColor = UnfocusedPlaceholderColor
     )
 }
 
@@ -116,7 +127,7 @@ fun PasswordField(
                 Icon(
                     imageVector = image,
                     contentDescription = if (passwordVisible) "Hide password" else "Show password",
-                    tint = Color(0xFFAAAAAA),
+                    tint = FocusedPlaceholderColor,
                 )
             }
         },
@@ -157,10 +168,10 @@ fun SubmitButton(
         modifier = TextFieldModifier,
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFEC705F),
-            contentColor = Color.White,
-            disabledContainerColor = Color(0xFFF5C5C5),
-            disabledContentColor = Color.LightGray
+            containerColor = ContainerColor,
+            contentColor = ContentColor,
+            disabledContainerColor = DisabledContainerColor,
+            disabledContentColor = DisabledContentColor
         )
     ) {
         if (showLoader) {
@@ -228,14 +239,14 @@ fun PasswordRequirementItem(requirement: String, isValid: Boolean) {
         Icon(
             imageVector = if (isValid) Icons.Filled.CheckCircle else Icons.Filled.Cancel,
             contentDescription = null,
-            tint = if (isValid) Color(0xFF4CAF50) else Color(0xFFF44336),
+            tint = if (isValid) SuccessColor else ErrorColor,
             modifier = Modifier.size(20.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = requirement,
             style = MaterialTheme.typography.bodySmall.copy(
-                color = if (isValid) Color(0xFF4CAF50) else Color(0xFFF44336)
+                color = if (isValid) SuccessColor else ErrorColor,
             )
         )
     }

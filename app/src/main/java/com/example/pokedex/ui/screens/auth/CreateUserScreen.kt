@@ -33,6 +33,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pokedex.ui.components.auth.AuthHeader
+import com.example.pokedex.ui.theme.AuthBackgroundColor
+import com.example.pokedex.ui.theme.SnackbarActionColor
+import com.example.pokedex.ui.theme.SnackbarContainerColor
 import com.example.pokedex.ui.viewModels.CreateUserState
 import com.example.pokedex.ui.viewModels.CreateUserViewModel
 
@@ -68,7 +71,7 @@ fun CreateUserScreen(
             modifier=modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(color = Color(0xFFEEEEEE)),
+                .background(color = AuthBackgroundColor),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             AuthHeader(
@@ -120,9 +123,9 @@ fun CreateUserScreen(
         ) { data ->
             Snackbar(
                 snackbarData = data,
-                containerColor = Color(0xFFFFCDD2),
+                containerColor = SnackbarContainerColor,
                 contentColor = Color.Black,
-                actionColor = Color(0xFFD32F2F),
+                actionColor = SnackbarActionColor,
             )
         }
     }
