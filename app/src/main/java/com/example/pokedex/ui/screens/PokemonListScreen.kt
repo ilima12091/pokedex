@@ -20,15 +20,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pokedex.ui.components.pokemonList.PokedexHeader
 import com.example.pokedex.ui.components.pokemonList.PokemonRow
-import com.example.pokedex.ui.viewModels.PokemonViewModel
+import com.example.pokedex.ui.viewModels.PokemonListViewModel
 
 @Composable
 fun PokemonListScreen(
     modifier: Modifier = Modifier,
-    viewModel: PokemonViewModel = viewModel(),
+    viewModel: PokemonListViewModel = hiltViewModel(),
     onPokemonNameClick: (String) -> Unit,
     onGoBack: () -> Unit
 ) {
