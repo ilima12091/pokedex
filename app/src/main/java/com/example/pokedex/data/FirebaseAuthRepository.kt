@@ -1,6 +1,7 @@
 package com.example.pokedex.data
 
 import com.example.pokedex.api.FirebaseAuthClient
+import com.example.pokedex.ui.utils.Constants
 import com.google.firebase.auth.FirebaseUser
 
 class FirebaseAuthRepository: AuthRepository {
@@ -25,6 +26,12 @@ class FirebaseAuthRepository: AuthRepository {
 
     override fun signOut() {
         FirebaseAuthClient.signOut()
+    }
+
+    override suspend fun getCurrentUserOrThrow(): FirebaseUser {
+        return getCurrentUser() ?: throw IllegalStateException(
+            Constants.ErrorMessages.USER_NOT_LOGGED_IN
+        )
     }
 
     override fun getCurrentUser(): FirebaseUser? {

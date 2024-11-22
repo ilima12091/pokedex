@@ -32,6 +32,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.pokedex.ui.components.auth.AuthHeader
 import com.example.pokedex.ui.viewModels.CreateUserState
 import com.example.pokedex.ui.viewModels.CreateUserViewModel
 
@@ -53,27 +54,12 @@ fun CreateUserScreen(
 
     Scaffold(
         topBar = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = Color(0xFFEEEEEE)),
-            ) {
-                IconButton(onClick = onBackToLogin) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Go back",
-                        Modifier.size(28.dp),
-                        colorResource(id = android.R.color.black)
-                    )
-                }
-                Text(
-                    text = "Register Your Account",
-                    style = TextStyle(
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black,
-                    )
+            IconButton(onClick = onBackToLogin) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Go back",
+                    Modifier.size(28.dp),
+                    colorResource(id = android.R.color.black)
                 )
             }
         }
@@ -85,6 +71,10 @@ fun CreateUserScreen(
                 .background(color = Color(0xFFEEEEEE)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            AuthHeader(
+                title = "Register Your Account",
+                subtitle = "Become a Pokémon Master",
+            )
             CreateUserForm(
                 email=email,
                 setEmail=setEmail,

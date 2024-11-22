@@ -51,6 +51,7 @@ fun LoginScreen(
             title = "Welcome to your Pokédex!",
             subtitle = "Are you ready to catch'em all?",
         )
+        Spacer(modifier = Modifier.height(32.dp))
         LoginForm(
             email=email,
             setEmail=setEmail,
