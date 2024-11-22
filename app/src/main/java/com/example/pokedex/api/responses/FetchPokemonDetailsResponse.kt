@@ -9,10 +9,16 @@ data class FetchPokemonDetailsResponse(
     val weight: Int,
     val order: Int,
     val id: Int,
+    val cries: Cries,
     val types: List<PokemonType>,
     val stats: List<PokemonStat>,
     val moves: List<PokemonMove>,
     val abilities: List<PokemonAbility>
+)
+
+data class Cries(
+    val latest: String,
+    val legacy: String
 )
 
 data class Sprites(
