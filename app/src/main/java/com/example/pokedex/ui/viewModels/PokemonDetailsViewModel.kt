@@ -7,14 +7,15 @@ import com.example.pokedex.api.mappers.toTypeNames
 import com.example.pokedex.api.responses.FetchPokemonDetailsResponse
 import com.example.pokedex.api.responses.PokemonType
 import com.example.pokedex.api.responses.Species
+import com.example.pokedex.data.FirebaseAuthRepository
+import com.example.pokedex.data.FirestoreUserRepository
 import com.example.pokedex.data.PokemonRepository
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.pokedex.data.models.FavoritePokemon
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 data class PokemonDetailsScreenUiState(
     val pokemonDetails: FetchPokemonDetailsResponse? = null,
@@ -27,108 +28,124 @@ data class PokemonDetailsScreenUiState(
 )
 
 class PokemonDetailsViewModel : ViewModel() {
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val firebaseAuthRepository = FirebaseAuthRepository()
+    private val firestoreUserRepository = FirestoreUserRepository()
 
     private val _uiState = MutableStateFlow(PokemonDetailsScreenUiState())
     val uiState = _uiState.asStateFlow()
 
+    private fun getCurrentUserOrHandleError(): FirebaseUser? {
+        val currentUser = firebaseAuthRepository.getCurrentUser()
+        if (currentUser == null) {
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                errorMessage = "User is not logged in."
+            )
+        }
+        return currentUser
+    }
+
     fun setProfilePicture(imageUrl: String) {
-        val uid = firebaseAuth.currentUser?.uid ?: return
-        firestore.collection("users").document(uid)
-            .update("profilePictureUrl", imageUrl)
-            .addOnSuccessListener {
+        viewModelScope.launch {
+            val currentUser = getCurrentUserOrHandleError() ?: return@launch
+            try {
+                firestoreUserRepository.updateUserProfilePicture(currentUser.uid, imageUrl)
                 _uiState.value = _uiState.value.copy(
-                    errorMessage = null,
-                    profilePictureUrl = imageUrl
+                    isLoading = false,
+                    profilePictureUrl = imageUrl,
+                    errorMessage = null
                 )
-            }
-            .addOnFailureListener { exception ->
-                Log.e("SetProfilePicture", "Failed to set profile picture: ${exception.message}")
+            } catch (e: Exception) {
+                Log.e("SetProfilePicture", "Failed to set profile picture: ${e.message}", e)
                 _uiState.value = _uiState.value.copy(
+                    isLoading = false,
                     errorMessage = "Failed to set profile picture. Please try again."
                 )
             }
+        }
     }
 
-    fun toggleFavorite(name: String?, id: String?, sprite: String?, types: List<PokemonType>?) {
-        val uid = firebaseAuth.currentUser?.uid ?: return
-        firestore.collection("users").document(uid)
-            .get()
-            .addOnSuccessListener { document ->
-                val favorites = (document.get("favorites") as? List<*>)?.mapNotNull { item ->
-                    (item as? Map<*, *>)?.filterKeys { it is String }?.mapKeys { it.key as String }
-                }?.toMutableList() ?: mutableListOf()
-                if (_uiState.value.isFavorite) {
-                    favorites.removeIf { it["name"] == name }
-                } else {
-                    val typeNames = types?.toTypeNames()
-                    val newFavorite = mapOf(
-                        "name" to name,
-                        "id" to id,
-                        "types" to typeNames,
-                        "sprite" to sprite,
+    fun toggleFavorite(name: String, id: String, sprite: String, types: List<PokemonType>) {
+        viewModelScope.launch {
+            val currentUser = getCurrentUserOrHandleError() ?: return@launch
+            val uid = currentUser.uid
+
+            firestoreUserRepository.getFavorites(uid).fold(
+                onSuccess = { currentFavorites ->
+                    val mutableFavorites = currentFavorites.toMutableList()
+
+                    if (_uiState.value.isFavorite) {
+                        mutableFavorites.removeIf { it.name == name }
+                    } else {
+                        val typeNames = types.toTypeNames()
+                        val newFavorite = FavoritePokemon(
+                            name = name,
+                            id = id,
+                            sprite = sprite,
+                            types = typeNames,
+                        )
+                        mutableFavorites.add(newFavorite)
+                    }
+
+                    firestoreUserRepository.updateFavorites(uid, mutableFavorites).fold(
+                        onSuccess = {
+                            _uiState.value = _uiState.value.copy(
+                                isFavorite = !_uiState.value.isFavorite
+                            )
+                        },
+                        onFailure = { updateError ->
+                            Log.e("ToggleFavorite", "Failed to update favorites: ${updateError.message}")
+                            _uiState.value = _uiState.value.copy(
+                                errorMessage = "Failed to update favorites. Please try again."
+                            )
+                        }
                     )
-                    favorites.add(newFavorite)
+                },
+                onFailure = { fetchError ->
+                    Log.e("ToggleFavorite", "Failed to fetch favorites: ${fetchError.message}")
+                    _uiState.value = _uiState.value.copy(
+                        errorMessage = "Failed to fetch favorites. Please try again."
+                    )
                 }
-                firestore.collection("users").document(uid)
-                    .update("favorites", favorites)
-                    .addOnSuccessListener {
-                        _uiState.value = _uiState.value.copy(
-                            isFavorite = !_uiState.value.isFavorite,
-                        )
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.e("ToggleFavorite", "Failed to fetch favorites: ${exception.message}")
-                        _uiState.value = _uiState.value.copy(
-                            errorMessage = "Failed to fetch favorites. Please try again."
-                        )
-                    }
-            }
-            .addOnFailureListener { exception ->
-                Log.e("ToggleFavorite", "Failed to toggle favorites: ${exception.message}")
-                _uiState.value = _uiState.value.copy(
-                    errorMessage = "Failed to toggle favorites. Please try again."
-                )
-            }
+            )
+        }
     }
 
     fun fetchPokemonDetails(name: String) {
-        _uiState.update {
-            it.copy(isLoading = true)
-        }
+        _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
+            val currentUser = getCurrentUserOrHandleError() ?: return@launch
             try {
+                val uid = currentUser.uid
                 Log.d("fetchPokemonDetails", "Name: $name")
                 val pokemonDetails = PokemonRepository.fetchPokemonDetails(name)
 
-                // Fetch favorite status
-                val uid = firebaseAuth.currentUser?.uid
-                val isFavorite = if (uid != null) {
-                    val document = firestore.collection("users").document(uid).get().await()
-                    val favorites =
-                        (document.get("favorites") as? List<*>)?.mapNotNull { favorite ->
-                            (favorite as? Map<*, *>)?.filterKeys { it is String }
-                                ?.mapKeys { it.key as String }
-                        } ?: emptyList()
+                // Fetch favorites
+                val isFavoriteResult = firestoreUserRepository.getFavorites(uid).fold(
+                    onSuccess = { favorites ->
+                        favorites.any { it.name == pokemonDetails.name }
+                    },
+                    onFailure = {
+                        Log.e("PokemonDetails", "Failed to fetch favorites: ${it.message}")
+                        false
+                    }
+                )
 
-                    favorites.any { it["name"] == pokemonDetails.name }
-                } else {
-                    false
-                }
-                val profilePictureUrl = if (uid != null) {
-                    val document = firestore.collection("users").document(uid).get().await()
-                    document.getString("profilePictureUrl")
-                } else {
-                    null
-                }
+                // Fetch profile picture URL
+                val profilePictureResult = firestoreUserRepository.getProfilePictureUrl(uid).fold(
+                    onSuccess = { url -> url },
+                    onFailure = {
+                        Log.e("PokemonDetails", "Failed to fetch profile picture URL: ${it.message}")
+                        null
+                    }
+                )
 
                 _uiState.update {
                     it.copy(
                         pokemonDetails = pokemonDetails,
-                        isFavorite = isFavorite,
+                        isFavorite = isFavoriteResult,
                         isLoading = false,
-                        profilePictureUrl = profilePictureUrl
+                        profilePictureUrl = profilePictureResult
                     )
                 }
             } catch (e: Exception) {
