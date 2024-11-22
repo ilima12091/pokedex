@@ -10,7 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pokedex.ui.theme.SemiTransparentWhite
-import com.example.pokedex.ui.utils.capitalizeString
 
 @Composable
 fun HomeTopBar(
@@ -41,7 +39,7 @@ fun HomeTopBar(
             Icon(
                 Icons.Outlined.AccountCircle,
                 contentDescription = "AccountDetails",
-                Modifier.size(40.dp)
+                Modifier.size(34.dp)
             )
         }
         TextButton(
@@ -54,14 +52,15 @@ fun HomeTopBar(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TextChip(
-                    text = "See all Pokémon",
+                    text = "See all Pokemon",
                     color = SemiTransparentWhite,
                     textColor = Color.Black,
                     modifier = Modifier
                         .defaultMinSize(minWidth = 100.dp),
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 18.sp,
-
+                    fontSize = 16.sp,
+                    horizontalPadding = 8.dp,
+                    verticalPadding = 8.dp
                 )
             }
         }
