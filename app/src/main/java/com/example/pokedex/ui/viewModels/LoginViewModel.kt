@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex.data.FirebaseAuthRepository
+import com.example.pokedex.ui.utils.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -29,13 +30,13 @@ class LoginViewModel() : ViewModel() {
                         _loginState.value = LoginState.Success
                     } else {
                         Log.e("LoginViewModel", "Login failed: User is null")
-                        _loginState.value = LoginState.Error("Login failed. Please try again.")
+                        _loginState.value = LoginState.Error(Constants.ErrorMessages.FAILED_TO_LOGIN)
                     }
                 },
                 onFailure = { exception ->
                     Log.e("LoginViewModel", "Login failed: ${exception.message}")
                     _loginState.value =
-                        LoginState.Error("Invalid email or password. Please try again.")
+                        LoginState.Error(Constants.ErrorMessages.INVALID_CREDENTIALS)
                 }
             )
         }

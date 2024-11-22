@@ -4,15 +4,20 @@ import android.util.Log
 import com.example.pokedex.api.FirestoreClient
 import com.example.pokedex.data.models.FavoritePokemon
 import com.example.pokedex.data.models.User
+import com.example.pokedex.ui.utils.Constants
 import kotlinx.coroutines.tasks.await
 
 class FirestoreUserRepository : UserRepository {
 
-    private val usersCollection = FirestoreClient.instance.collection("users")
+    private val usersCollection = FirestoreClient.instance.collection(
+        Constants.FirestoreKeys.USERS_COLLECTION
+    )
 
     override suspend fun updateUserProfilePicture(uid: String, imageUrl: String): Result<Unit> {
         return try {
-            usersCollection.document(uid).update("profilePictureUrl", imageUrl).await()
+            usersCollection.document(uid).update(
+                Constants.FirestoreKeys.PROFILE_PICTURE_FIELD, imageUrl
+            ).await()
             Result.success(Unit)
         } catch (e: Exception) {
             Log.e("FirestoreUserRepository", "Error updating profile picture: ${e.message}", e)
@@ -57,7 +62,7 @@ class FirestoreUserRepository : UserRepository {
 
     override suspend fun updateFavorites(uid: String, favorites: List<FavoritePokemon>): Result<Unit> {
         return try {
-            usersCollection.document(uid).update("favorites", favorites).await()
+            usersCollection.document(uid).update(Constants.FirestoreKeys.FAVORITES_FIELD, favorites).await()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -67,7 +72,7 @@ class FirestoreUserRepository : UserRepository {
     override suspend fun getProfilePictureUrl(uid: String): Result<String?> {
         return try {
             val document = usersCollection.document(uid).get().await()
-            val profilePictureUrl = document.getString("profilePictureUrl")
+            val profilePictureUrl = document.getString(Constants.FirestoreKeys.PROFILE_PICTURE_FIELD)
             Result.success(profilePictureUrl)
         } catch (e: Exception) {
             Log.e("FirestoreRepository", "Error fetching profile picture URL: ${e.message}")

@@ -19,6 +19,10 @@ object Constants {
         const val FAILED_TO_RETRIEVE_USER_ID = "Failed to retrieve user ID"
         const val FAILED_TO_CREATE_ACCOUNT = "Failed to create account"
         const val FAILED_TO_LOGIN = "Failed to login"
+        const val INVALID_CREDENTIALS = "Invalid email or password. Please try again."
+        const val FAILED_TO_PERFORM_ACTION = "Failed to perform action. Please try again"
+        const val FAILED_TO_FETCH_FAVORITES = "Failed to fetch favorites."
+
     }
 
     object UiConstants {
@@ -27,5 +31,7 @@ object Constants {
 
     object Pokemon {
         const val LAST_POKEMON_ORDER = 1010
+        const val FETCH_POKEMON_OFFSET = 0
+        const val FETCH_POKEMON_PAGE_SIZE = 20
     }
 }

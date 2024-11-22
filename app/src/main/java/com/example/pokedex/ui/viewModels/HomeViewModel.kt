@@ -7,6 +7,7 @@ import com.example.pokedex.api.responses.FetchPokemonDetailsResponse
 import com.example.pokedex.data.FirebaseAuthRepository
 import com.example.pokedex.data.FirestoreUserRepository
 import com.example.pokedex.data.PokemonRepository
+import com.example.pokedex.ui.utils.Constants
 import com.example.pokedex.ui.utils.getPokemonIdsForHomeScreen
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -28,28 +29,20 @@ class HomeViewModel: ViewModel() {
     val uiState = _uiState.asStateFlow()
 
     fun fetchPokemonDetailsForHome() {
-        _uiState.update { it.copy(isLoading = true) }
-
-        val currentUser = firebaseAuthRepository.getCurrentUser()
-        if (currentUser == null) {
-            Log.e("fetchPokemonDetailsForHome", "No user logged in")
-            _uiState.update {
-                it.copy(
-                    errorMessage = "No user logged in",
-                    isLoading = false
-                )
-            }
-            return
-        }
-
         viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+
             try {
+                val currentUser = firebaseAuthRepository.getCurrentUserOrThrow()
                 val result = firestoreUserRepository.getFavorites(currentUser.uid)
                 val favoriteIds = result.fold(
                     onSuccess = { list -> list.map { it.id } },
-                    onFailure = { emptyList() }
+                    onFailure = { exception ->
+                        Log.e("fetchPokemonDetailsForHome", "Failed to fetch favorites: ${exception.message}", exception)
+                        emptyList()
+                    }
                 )
-                Log.d("fetchPokemonDetailsForHome", "Favorite Pokémon ids: $favoriteIds ")
+                Log.d("fetchPokemonDetailsForHome", "Favorite Pokémon ids: $favoriteIds")
 
                 val pokemonIds = getPokemonIdsForHomeScreen(favoriteIds = favoriteIds)
                 Log.d("fetchPokemonDetailsForHome", "Fetching details for Pokémon IDs: $pokemonIds")
@@ -66,11 +59,19 @@ class HomeViewModel: ViewModel() {
                         isLoading = false
                     )
                 }
-            } catch (e: Exception) {
-                Log.e("fetchPokemonDetailsForHome", "Error fetching data: ${e.message}")
+            } catch (e: IllegalStateException) {
+                Log.e("fetchPokemonDetailsForHome", "User is not logged in: ${e.message}", e)
                 _uiState.update {
                     it.copy(
-                        errorMessage = e.message ?: "Failed to fetch data",
+                        errorMessage = e.message,
+                        isLoading = false
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e("fetchPokemonDetailsForHome", "Error fetching data: ${e.message}", e)
+                _uiState.update {
+                    it.copy(
+                        errorMessage = Constants.ErrorMessages.FAILED_TO_FETCH_DATA,
                         isLoading = false
                     )
                 }
