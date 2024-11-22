@@ -1,5 +1,6 @@
 package com.example.pokedex.data
 
+import android.util.Log
 import com.example.pokedex.api.FirestoreClient
 import com.example.pokedex.data.models.FavoritePokemon
 import com.example.pokedex.data.models.User
@@ -8,6 +9,16 @@ import kotlinx.coroutines.tasks.await
 class FirestoreUserRepository : UserRepository {
 
     private val usersCollection = FirestoreClient.instance.collection("users")
+
+    override suspend fun updateUserProfilePicture(uid: String, imageUrl: String): Result<Unit> {
+        return try {
+            usersCollection.document(uid).update("profilePictureUrl", imageUrl).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e("FirestoreUserRepository", "Error updating profile picture: ${e.message}", e)
+            Result.failure(e)
+        }
+    }
 
     override suspend fun getUser(uid: String): Result<User> {
         return try {
@@ -36,8 +47,10 @@ class FirestoreUserRepository : UserRepository {
         return try {
             val document = usersCollection.document(uid).get().await()
             val favorites = document.toObject(User::class.java)?.favorites ?: emptyList()
+            Log.d("FirestoreRepository", "favorites is: $favorites")
             Result.success(favorites)
         } catch (e: Exception) {
+            Log.e("FirestoreRepository", "Error fetching favorites for user $uid: ${e.message}", e)
             Result.failure(e)
         }
     }
@@ -47,6 +60,17 @@ class FirestoreUserRepository : UserRepository {
             usersCollection.document(uid).update("favorites", favorites).await()
             Result.success(Unit)
         } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getProfilePictureUrl(uid: String): Result<String?> {
+        return try {
+            val document = usersCollection.document(uid).get().await()
+            val profilePictureUrl = document.getString("profilePictureUrl")
+            Result.success(profilePictureUrl)
+        } catch (e: Exception) {
+            Log.e("FirestoreRepository", "Error fetching profile picture URL: ${e.message}")
             Result.failure(e)
         }
     }

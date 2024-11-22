@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex.api.responses.FetchPokemonDetailsResponse
+import com.example.pokedex.data.FirebaseAuthRepository
+import com.example.pokedex.data.FirestoreUserRepository
 import com.example.pokedex.data.PokemonRepository
 import com.example.pokedex.ui.utils.getPokemonIdsForHomeScreen
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,23 +22,16 @@ data class HomeUiState(
 )
 
 class HomeViewModel: ViewModel() {
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-
+    private val firebaseAuthRepository = FirebaseAuthRepository()
+    private val firestoreUserRepository = FirestoreUserRepository()
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun clearErrorMessage() {
-        _uiState.value = _uiState.value.copy(errorMessage = null)
-    }
-
     fun fetchPokemonDetailsForHome() {
-        _uiState.update {
-            it.copy(isLoading = true)
-        }
+        _uiState.update { it.copy(isLoading = true) }
 
-        val uid = firebaseAuth.currentUser?.uid
-        if (uid == null) {
+        val currentUser = firebaseAuthRepository.getCurrentUser()
+        if (currentUser == null) {
             Log.e("fetchPokemonDetailsForHome", "No user logged in")
             _uiState.update {
                 it.copy(
@@ -49,52 +42,39 @@ class HomeViewModel: ViewModel() {
             return
         }
 
-        firestore.collection("users").document(uid).get()
-            .addOnSuccessListener { document ->
-                val favorites = (document.get("favorites") as? List<*>)?.mapNotNull { item ->
-                    (item as? Map<*, *>)?.filterKeys { it is String }?.mapKeys { it.key as String }
-                } ?: emptyList()
-                Log.d("fetchPokemonDetailsForHome", "Favorites are: $favorites")
+        viewModelScope.launch {
+            try {
+                val result = firestoreUserRepository.getFavorites(currentUser.uid)
+                val favoriteIds = result.fold(
+                    onSuccess = { list -> list.map { it.id } },
+                    onFailure = { emptyList() }
+                )
+                Log.d("fetchPokemonDetailsForHome", "Favorite Pokémon ids: $favoriteIds ")
 
-                val favoriteOrders = favorites.mapNotNull { it["id"].toString() }
-                Log.d("fetchPokemonDetailsForHome", "Favorite Pokémon orders: $favoriteOrders")
+                val pokemonIds = getPokemonIdsForHomeScreen(favoriteIds = favoriteIds)
+                Log.d("fetchPokemonDetailsForHome", "Fetching details for Pokémon IDs: $pokemonIds")
 
-                viewModelScope.launch {
-                    try {
-                        val pokemonIds = getPokemonIdsForHomeScreen(favoriteOrders = favoriteOrders)
-                        Log.d("fetchPokemonDetailsForHome", "Fetching details for Pokémon IDs: $pokemonIds")
-
-                        val pokemonDetailsList = pokemonIds.map { id ->
-                            async {
-                                PokemonRepository.fetchPokemonDetails(id)
-                            }
-                        }.awaitAll()
-
-                        _uiState.update {
-                            it.copy(
-                                pokemonDetailsList = pokemonDetailsList,
-                                isLoading = false
-                            )
-                        }
-                    } catch (e: Exception) {
-                        Log.e("PokemonDetails", "Error fetching data: ${e.message}")
-                        _uiState.update {
-                            it.copy(
-                                errorMessage = "Failed to fetch Pokémon details",
-                                isLoading = false
-                            )
-                        }
+                val pokemonDetailsList = pokemonIds.map { id ->
+                    async {
+                        PokemonRepository.fetchPokemonDetails(id)
                     }
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.e("fetchPokemonDetailsForHome", "Error fetching favorites: ${e.message}")
+                }.awaitAll()
+
                 _uiState.update {
                     it.copy(
-                        errorMessage = "Failed to fetch favorites",
+                        pokemonDetailsList = pokemonDetailsList,
+                        isLoading = false
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e("fetchPokemonDetailsForHome", "Error fetching data: ${e.message}")
+                _uiState.update {
+                    it.copy(
+                        errorMessage = e.message ?: "Failed to fetch data",
                         isLoading = false
                     )
                 }
             }
         }
+    }
 }

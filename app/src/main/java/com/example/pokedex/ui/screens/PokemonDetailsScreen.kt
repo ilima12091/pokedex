@@ -105,9 +105,9 @@ fun PokemonDetailsScreen(
                 onGoBack = onGoBack,
                 onFavoriteClick = {
                     viewModel.toggleFavorite(
-                        name = pokemonDetails?.name,
-                        sprite = pokemonDetails?.sprites?.frontDefault,
-                        types = pokemonDetails?.types,
+                        name = pokemonDetails?.name ?: "N/A",
+                        sprite = pokemonDetails?.sprites?.frontDefault ?: "N/A",
+                        types = pokemonDetails?.types ?: emptyList(),
                         id = pokemonDetails?.id.toString(),
                     )
                 },

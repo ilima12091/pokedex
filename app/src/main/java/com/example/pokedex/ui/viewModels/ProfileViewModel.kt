@@ -1,10 +1,12 @@
 package com.example.pokedex.ui.viewModels
 
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.lifecycle.viewModelScope
+import com.example.pokedex.data.FirebaseAuthRepository
+import com.example.pokedex.data.FirestoreUserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 data class ProfileUiState(
     val isLoading: Boolean = false,
@@ -16,14 +18,13 @@ data class ProfileUiState(
 )
 
 class ProfileViewModel : ViewModel() {
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-
+    private val firebaseAuthRepository = FirebaseAuthRepository()
+    private val firestoreUserRepository = FirestoreUserRepository()
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState = _uiState.asStateFlow()
 
     fun signOut() {
-        firebaseAuth.signOut()
+        firebaseAuthRepository.signOut()
     }
 
     fun clearErrorMessage() {
@@ -31,46 +32,40 @@ class ProfileViewModel : ViewModel() {
     }
 
     fun fetchUserDetails() {
-        val uid = firebaseAuth.currentUser?.uid
-        val email = firebaseAuth.currentUser?.email
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
 
-        if (uid == null || email == null) {
-            _uiState.value = ProfileUiState(
-                isLoading = false,
-                errorMessage = "User is not logged in."
-            )
-            return
-        }
-
-        _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
-
-        firestore.collection("users").document(uid)
-            .get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    val name = document.getString("name")
-                    val lastName = document.getString("lastName")
-                    val profilePictureUrl = document.getString("profilePictureUrl")
-                    _uiState.value = ProfileUiState(
-                        isLoading = false,
-                        name = name,
-                        lastName = lastName,
-                        email = email,
-                        errorMessage = null,
-                        profilePictureUrl = profilePictureUrl
-                    )
-                } else {
-                    _uiState.value = ProfileUiState(
-                        isLoading = false,
-                        errorMessage = "User details not found."
-                    )
-                }
-            }
-            .addOnFailureListener { exception ->
+            val currentUser = firebaseAuthRepository.getCurrentUser()
+            if (currentUser == null) {
                 _uiState.value = ProfileUiState(
                     isLoading = false,
-                    errorMessage = "Failed to fetch user details: ${exception.message}"
+                    errorMessage = "User is not logged in."
                 )
+                return@launch
             }
+
+            val uid = currentUser.uid
+            val email = currentUser.email
+
+            val result = firestoreUserRepository.getUser(uid)
+            result.fold(
+                onSuccess = { user ->
+                    _uiState.value = ProfileUiState(
+                        isLoading = false,
+                        name = user.name,
+                        lastName = user.lastName,
+                        email = email,
+                        profilePictureUrl = user.profilePictureUrl,
+                        errorMessage = null
+                    )
+                },
+                onFailure = { exception ->
+                    _uiState.value = ProfileUiState(
+                        isLoading = false,
+                        errorMessage = "Failed to fetch user details: ${exception.message}"
+                    )
+                }
+            )
+        }
     }
 }
