@@ -23,7 +23,8 @@ import com.example.pokedex.ui.theme.SemiTransparentWhite
 @Composable
 fun HomeTopBar(
     onNavigateToPokemonList: () -> Unit,
-    onNavigateToProfile: () -> Unit
+    onNavigateToProfile: () -> Unit,
+    onNavigateToSearch: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -41,6 +42,27 @@ fun HomeTopBar(
                 contentDescription = "AccountDetails",
                 Modifier.size(34.dp)
             )
+        }
+        TextButton(
+            onClick = {
+                onNavigateToSearch()
+            },
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TextChip(
+                    text = "Search Pokemon",
+                    color = SemiTransparentWhite,
+                    textColor = Color.Black,
+                    modifier = Modifier
+                        .defaultMinSize(minWidth = 100.dp),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 18.sp,
+
+                    )
+            }
         }
         TextButton(
             onClick = {

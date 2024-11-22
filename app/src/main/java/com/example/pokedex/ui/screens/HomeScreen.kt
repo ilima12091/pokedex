@@ -29,7 +29,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
     onNavigateToPokemonList: () -> Unit,
     onNavigateToProfile: () -> Unit,
-    onPokemonClick: (String) -> Unit
+    onPokemonClick: (String) -> Unit,
+    onNavigateToSearch: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -43,7 +44,8 @@ fun HomeScreen(
         ) {
             HomeTopBar(
                 onNavigateToPokemonList = onNavigateToPokemonList,
-                onNavigateToProfile = onNavigateToProfile
+                onNavigateToProfile = onNavigateToProfile,
+                onNavigateToSearch = onNavigateToSearch
             )
 
             if (uiState.isLoading) {
