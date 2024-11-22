@@ -54,23 +54,24 @@ Toda la información sobre los Pokémon es obtenida de [PokeAPI](https://pokeapi
 - **Firestore**: Gestión de favoritos y datos del usuario en la nube.
 
 ### ✅ **Validación Interactiva en Formularios**
+- Validación interactiva en pantallas de login y creación de usuarios.
 - Ayuda interactiva para guiar al usuario en la creación de un **password seguro**.
 
 ---
 
 ## 🎨 **Diseño UI**
 
-### 🔒 **Pantallas de Login y Creación de Usuario**
-- Inspiradas en el siguiente diseño:
-  *(TODO: Enlace o captura del diseño)*
+### 🔒 **Flow de Autenticación**
+- Las pantallas de Login y Creación de Usuario se inspiran en el siguiente diseño de Dribbble:  
+  [Login & Register Mobile App](https://dribbble.com/shots/15889044-Login-Register-Mobile-App)
 
 ### 🐾 **Pantallas de Detalles de Pokémon y Home Screen**
-- Inspiradas en:
-  *(TODO: Enlace o captura del diseño)*
+- Estas pantallas toman inspiración de este diseño en Dribbble:  
+  [Pokedex App](https://dribbble.com/shots/6540871-Pokedex-App/attachments/6540871-Pokedex-App?mode=media)
 
 ### 👤 **Pantalla de Perfil**
-- Inspirada en un diseño creado en Figma por el grupo:
-  *(TODO: Enlace o captura del diseño)*
+- La pantalla de Perfil, así como algunos detalles adicionales de otras pantallas, están basados en este diseño en Figma:  
+  [Pokedex - Desarrollo Android](https://www.figma.com/design/c1wb3eCjzQjX3FDmavvQf3/Pokedex---Desarrollo-Android?node-id=1-4&t=gmoKyC9WWx5rAbU4-1)
 
 ---
 
