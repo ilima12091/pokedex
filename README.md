@@ -74,6 +74,11 @@ gratuita que provee datos sobre Pokémon. 🎉
 
 - Inclusión de botones que permiten al usuario reproducir el sonido legacy y el latest del pokemon.
 
+### 🔎 **Implementar una pantalla de Search para buscar Pokemons**
+
+- Inclusión de botone en Home que redirecciona a una pantalla de search.
+- Pantalla de search con fuiltro para buscar por nombre.
+
 ---
 
 ## 🎨 **Diseño UI**
