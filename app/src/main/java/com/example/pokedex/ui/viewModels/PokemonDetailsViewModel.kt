@@ -7,6 +7,7 @@ import com.example.pokedex.api.mappers.toTypeNames
 import com.example.pokedex.api.responses.FetchPokemonDetailsResponse
 import com.example.pokedex.api.responses.PokemonType
 import com.example.pokedex.api.responses.Species
+import com.example.pokedex.data.AuthRepository
 import com.example.pokedex.data.FirebaseAuthRepository
 import com.example.pokedex.data.FirestoreUserRepository
 import com.example.pokedex.data.PokemonRepository
@@ -32,7 +33,8 @@ data class PokemonDetailsScreenUiState(
 @HiltViewModel
 class PokemonDetailsViewModel @Inject constructor(
     private val firebaseAuthRepository: FirebaseAuthRepository,
-    private val firestoreUserRepository: FirestoreUserRepository
+    private val firestoreUserRepository: FirestoreUserRepository,
+    private val pokemonRepository: PokemonRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(PokemonDetailsScreenUiState())
     val uiState = _uiState.asStateFlow()
@@ -133,7 +135,7 @@ class PokemonDetailsViewModel @Inject constructor(
 
                 Log.d("fetchPokemonDetails", "Fetching details for Pokémon: $name")
 
-                val pokemonDetails = PokemonRepository.fetchPokemonDetails(name)
+                val pokemonDetails = pokemonRepository.fetchPokemonDetails(name)
 
                 // Fetch favorites
                 val isFavorite = firestoreUserRepository.getFavorites(uid).fold(
@@ -188,7 +190,7 @@ class PokemonDetailsViewModel @Inject constructor(
             it.copy(isLoadingEvolutionChain = true)
         }
         viewModelScope.launch {
-            val evolutionChain = PokemonRepository.fetchPokemonEvolutionChain(name)
+            val evolutionChain = pokemonRepository.fetchPokemonEvolutionChain(name)
             _uiState.update {
                 it.copy(
                     evolutionChain = evolutionChain,
