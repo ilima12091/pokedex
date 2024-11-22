@@ -8,6 +8,7 @@ data class FetchPokemonDetailsResponse(
     val height: Int,
     val weight: Int,
     val order: Int,
+    val id: Int,
     val types: List<PokemonType>,
     val stats: List<PokemonStat>,
     val moves: List<PokemonMove>,

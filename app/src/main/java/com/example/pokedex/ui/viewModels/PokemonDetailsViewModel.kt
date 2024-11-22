@@ -51,7 +51,7 @@ class PokemonDetailsViewModel : ViewModel() {
             }
     }
 
-    fun toggleFavorite(name: String?, sprite: String?, types: List<PokemonType>?) {
+    fun toggleFavorite(name: String?, id: String?, sprite: String?, types: List<PokemonType>?) {
         val uid = firebaseAuth.currentUser?.uid ?: return
         firestore.collection("users").document(uid)
             .get()
@@ -65,6 +65,7 @@ class PokemonDetailsViewModel : ViewModel() {
                     val typeNames = types?.toTypeNames()
                     val newFavorite = mapOf(
                         "name" to name,
+                        "id" to id,
                         "types" to typeNames,
                         "sprite" to sprite,
                     )

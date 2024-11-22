@@ -108,6 +108,7 @@ fun PokemonDetailsScreen(
                         name = pokemonDetails?.name,
                         sprite = pokemonDetails?.sprites?.frontDefault,
                         types = pokemonDetails?.types,
+                        id = pokemonDetails?.id.toString(),
                     )
                 },
                 isFavorite = isFavorite,
