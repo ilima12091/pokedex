@@ -1,10 +1,12 @@
 package com.example.pokedex.ui.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex.data.FirebaseAuthRepository
 import com.example.pokedex.data.FirestoreUserRepository
 import com.example.pokedex.data.models.User
+import com.example.pokedex.ui.utils.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -17,12 +19,16 @@ class CreateUserViewModel : ViewModel() {
 
     fun createUser(email: String, password: String, confirmPassword: String, name: String, lastName: String) {
         if (email.isBlank() || password.isBlank()) {
-            _createUserState.value = CreateUserState.Error("Email and Password cannot be empty")
+            _createUserState.value = CreateUserState.Error(
+                Constants.ErrorMessages.EMAIL_AND_PASS_CANNOT_BE_EMPTY
+            )
             return
         }
 
         if (password != confirmPassword) {
-            _createUserState.value = CreateUserState.Error("Passwords do not match.")
+            _createUserState.value = CreateUserState.Error(
+                Constants.ErrorMessages.PASS_DO_NOT_MATCH
+            )
             return
         }
 
@@ -44,18 +50,25 @@ class CreateUserViewModel : ViewModel() {
                                 loginAfterCreation(email, password)
                             },
                             onFailure = { exception ->
+                                Log.e("CreateUserViewModel", "Failed to save user details: ${exception.message}", exception)
                                 _createUserState.value = CreateUserState.Error(
-                                    exception.message ?: "Failed to save user details"
+                                    exception.message ?: Constants.ErrorMessages.FAILED_TO_SAVE_USER_DETAILS
                                 )
                             }
                         )
                     } else {
-                        _createUserState.value = CreateUserState.Error("Failed to retrieve user ID")
+                        Log.e("CreateUserViewModel", "Failed to retrieve user ID")
+                        _createUserState.value = CreateUserState.Error(
+                            Constants.ErrorMessages.FAILED_TO_RETRIEVE_USER_ID
+                        )
                     }
                 },
                 onFailure = { exception ->
+                    Log.e("CreateUserViewModel", "Failed to create account: ${exception.message}", exception)
                     _createUserState.value =
-                        CreateUserState.Error(exception.message ?: "Failed to create account")
+                        CreateUserState.Error(
+                            exception.message ?: Constants.ErrorMessages.FAILED_TO_CREATE_ACCOUNT
+                        )
                 }
             )
         }
@@ -68,8 +81,9 @@ class CreateUserViewModel : ViewModel() {
                     _createUserState.value = CreateUserState.Success
                 },
                 onFailure = { exception ->
+                    Log.e("CreateUserViewModel", "Failed to login after account creation: ${exception.message}", exception)
                     _createUserState.value = CreateUserState.Error(
-                        exception.message ?: "Failed to log in after account creation"
+                        Constants.ErrorMessages.FAILED_TO_LOGIN
                     )
                 }
             )

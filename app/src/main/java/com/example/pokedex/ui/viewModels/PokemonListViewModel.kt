@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex.api.responses.PokemonListItem
 import com.example.pokedex.data.PokemonRepository
+import com.example.pokedex.ui.utils.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,9 +15,8 @@ class PokemonViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(PokemonScreenUiState())
     val uiState = _uiState.asStateFlow()
 
-
-    private var currentOffset = 0
-    private val pageSize = 20
+    private var currentOffset = Constants.Pokemon.FETCH_POKEMON_OFFSET
+    private val pageSize = Constants.Pokemon.FETCH_POKEMON_PAGE_SIZE
 
     init {
         fetchPokemons()

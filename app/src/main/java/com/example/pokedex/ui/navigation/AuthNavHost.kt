@@ -1,4 +1,4 @@
-package com.example.pokedex
+package com.example.pokedex.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
