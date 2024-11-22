@@ -4,13 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex.api.responses.PokemonListItem
 import com.example.pokedex.data.PokemonRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SearchViewModel: ViewModel() {
-
+@HiltViewModel
+class SearchViewModel @Inject constructor(
+    private val pokemonRepository: PokemonRepository
+) : ViewModel() {
     private val _uiState = MutableStateFlow(SearchScreenUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -22,7 +26,7 @@ class SearchViewModel: ViewModel() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {
-                val allPokemons = PokemonRepository.fetchAllPokemons()
+                val allPokemons = pokemonRepository.fetchAllPokemons()
                 _uiState.update { currentState ->
                     currentState.copy(
                         pokemonList = allPokemons,
