@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
@@ -40,6 +41,7 @@ import coil3.compose.AsyncImage
 import com.example.pokedex.R
 import com.example.pokedex.ui.components.DataRow
 import com.example.pokedex.ui.components.profile.ProfileHeader
+import com.example.pokedex.ui.theme.LogoutColor
 import com.example.pokedex.ui.theme.SnackbarActionColor
 import com.example.pokedex.ui.theme.SnackbarContainerColor
 import com.example.pokedex.ui.utils.Constants
@@ -82,7 +84,7 @@ fun ProfileScreen(
             Scaffold { innerPadding ->
                 Column(
                     modifier = Modifier
-                        .background(Color.LightGray)
+                        .background(MaterialTheme.colorScheme.surface)
                         .padding(top = innerPadding.calculateTopPadding())
                         .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -107,9 +109,12 @@ fun ProfileScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxHeight()
-                            .shadow(8.dp, shape = RoundedCornerShape(32.dp))
+                            .shadow(
+                                8.dp,
+                                shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+                            )
                             .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-                            .background(Color.White)
+                            .background(MaterialTheme.colorScheme.background)
                             .padding(32.dp),
                         verticalArrangement = Arrangement.spacedBy(24.dp)
                     ) {
@@ -131,12 +136,12 @@ fun ProfileScreen(
                                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Text("Logout", fontSize = 18.sp, color = Color.Red)
+                                    Text("Logout", fontSize = 18.sp, color = LogoutColor)
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Filled.Logout,
                                         contentDescription = "Logout button",
                                         Modifier.size(24.dp),
-                                        tint = Color.Red
+                                        tint = LogoutColor
                                     )
                                 }
                             }

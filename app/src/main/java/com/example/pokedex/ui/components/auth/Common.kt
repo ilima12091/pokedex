@@ -38,34 +38,30 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pokedex.ui.theme.ContainerColor
-import com.example.pokedex.ui.theme.ContentColor
 import com.example.pokedex.ui.theme.DisabledContainerColor
 import com.example.pokedex.ui.theme.DisabledContentColor
 import com.example.pokedex.ui.theme.ErrorColor
 import com.example.pokedex.ui.theme.FocusedPlaceholderColor
-import com.example.pokedex.ui.theme.PrimaryTextColor
 import com.example.pokedex.ui.theme.SuccessColor
-import com.example.pokedex.ui.theme.TextFieldContainerColor
 import com.example.pokedex.ui.theme.TransparentIndicatorColor
-import com.example.pokedex.ui.theme.UnfocusedPlaceholderColor
 
 val TextFieldModifier = Modifier
     .fillMaxWidth()
     .height(68.dp)
     .padding(horizontal = 32.dp, vertical = 6.dp)
 
+
 @Composable
 fun textFieldColors(): TextFieldColors {
     return TextFieldDefaults.colors(
-        focusedContainerColor = TextFieldContainerColor,
-        unfocusedContainerColor = TextFieldContainerColor,
-        focusedTextColor = PrimaryTextColor,
-        unfocusedTextColor = PrimaryTextColor,
+        focusedContainerColor = MaterialTheme.colorScheme.surface,
+        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
         focusedIndicatorColor = TransparentIndicatorColor,
         unfocusedIndicatorColor = TransparentIndicatorColor,
-        focusedPlaceholderColor = FocusedPlaceholderColor,
-        unfocusedPlaceholderColor = UnfocusedPlaceholderColor
+        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurface,
+        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface
     )
 }
 
@@ -149,7 +145,7 @@ fun EmailField(
         placeholder = { Text(text = "Email") },
         modifier = TextFieldModifier,
         singleLine = true,
-        keyboardOptions = KeyboardOptions.Default.copy( keyboardType = KeyboardType.Email),
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
         shape = RoundedCornerShape(8.dp),
         colors = textFieldColors(),
     )
@@ -168,15 +164,15 @@ fun SubmitButton(
         modifier = TextFieldModifier,
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = ContainerColor,
-            contentColor = ContentColor,
+            containerColor = MaterialTheme.colorScheme.onSurface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
             disabledContainerColor = DisabledContainerColor,
             disabledContentColor = DisabledContentColor
         )
     ) {
         if (showLoader) {
             CircularProgressIndicator(
-                color = Color.White,
+                color = MaterialTheme.colorScheme.surface,
                 strokeWidth = 2.dp,
                 modifier = Modifier.size(20.dp)
             )
@@ -185,7 +181,7 @@ fun SubmitButton(
                 text = text,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.surface,
             )
         }
     }
@@ -235,7 +231,10 @@ fun PasswordRequirements(
 
 @Composable
 fun PasswordRequirementItem(requirement: String, isValid: Boolean) {
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 4.dp)) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(vertical = 4.dp)
+    ) {
         Icon(
             imageVector = if (isValid) Icons.Filled.CheckCircle else Icons.Filled.Cancel,
             contentDescription = null,

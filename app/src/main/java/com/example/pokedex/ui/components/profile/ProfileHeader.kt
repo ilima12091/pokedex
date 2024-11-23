@@ -33,14 +33,14 @@ fun ProfileHeader(
                 contentDescription = "Go back",
                 Modifier
                     .size(30.dp)
-                    .align(Alignment.CenterStart)
+                    .align(Alignment.CenterStart),
             )
         }
         Text(
             "Profile",
             modifier = Modifier.align(Alignment.Center),
             fontSize = 22.sp,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
         )
     }
 }
