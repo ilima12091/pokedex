@@ -29,7 +29,7 @@ fun PokemonStatRow(
             modifier = Modifier.defaultMinSize(minWidth = 160.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = label, color = Color.Gray)
+            Text(text = label)
             Text(text = value.toString())
         }
         LinearProgressIndicator(

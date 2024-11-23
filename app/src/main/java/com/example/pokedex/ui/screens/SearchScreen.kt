@@ -7,10 +7,16 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -63,6 +69,9 @@ fun SearchScreen(
                 label = { Text("Search Pokemon") },
                 placeholder = { Text("Write Pokemon's name") },
                 singleLine = true,
+                textStyle = LocalTextStyle.current.copy(
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             )
 
             Box(
@@ -81,6 +90,21 @@ fun SearchScreen(
                                 pokemon = pokemon,
                                 onClick = { onPokemonNameClick(pokemon.name) }
                             )
+                        }
+                    }
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column {
+                            Icon(
+                                imageVector = Icons.Outlined.SearchOff,
+                                contentDescription = "Search",
+                                modifier = Modifier.size(100.dp),
+                            )
+                            Text("No results found")
                         }
                     }
                 }
