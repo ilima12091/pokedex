@@ -84,7 +84,7 @@ gratuita que provee datos sobre Pokémon. 🎉
 - Se configuró Hilt como el framework de inyección de dependencias para la aplicación.
 - Se inyectaron las dependencias en todos los ViewModels utilizando Hilt.
 
-### ☀️️☀🌑 Modo light y dark
+### ☀️️ 🌑 Modo light y dark
 
 - Se implementaron los colores y estilos para que la aplicación pueda cambiar entre light y dark
   mode.
