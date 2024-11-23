@@ -7,13 +7,17 @@ import com.example.pokedex.data.FirebaseAuthRepository
 import com.example.pokedex.data.FirestoreUserRepository
 import com.example.pokedex.data.models.User
 import com.example.pokedex.ui.utils.Constants
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CreateUserViewModel : ViewModel() {
-    private val firebaseAuthRepository = FirebaseAuthRepository()
-    private val firestoreUserRepository = FirestoreUserRepository()
+@HiltViewModel
+class CreateUserViewModel @Inject constructor(
+    private val firebaseAuthRepository: FirebaseAuthRepository,
+    private val firestoreUserRepository: FirestoreUserRepository
+) : ViewModel() {
     private val _createUserState = MutableStateFlow<CreateUserState>(CreateUserState.Idle)
     val createUserState: StateFlow<CreateUserState> = _createUserState
 

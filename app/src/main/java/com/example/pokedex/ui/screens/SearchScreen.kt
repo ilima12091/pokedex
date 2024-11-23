@@ -20,7 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pokedex.ui.components.SearchHeader
 import com.example.pokedex.ui.components.pokemonList.PokemonRow
 import com.example.pokedex.ui.viewModels.SearchViewModel
@@ -28,7 +28,7 @@ import com.example.pokedex.ui.viewModels.SearchViewModel
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    viewModel: SearchViewModel = viewModel(),
+    viewModel: SearchViewModel = hiltViewModel(),
     onPokemonNameClick: (String) -> Unit,
     onGoBack: () -> Unit
 ) {

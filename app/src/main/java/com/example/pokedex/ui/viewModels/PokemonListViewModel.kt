@@ -5,12 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.example.pokedex.api.responses.PokemonListItem
 import com.example.pokedex.data.PokemonRepository
 import com.example.pokedex.ui.utils.Constants
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PokemonViewModel: ViewModel() {
+@HiltViewModel
+class PokemonListViewModel @Inject constructor(
+    private val pokemonRepository: PokemonRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PokemonScreenUiState())
     val uiState = _uiState.asStateFlow()
@@ -24,7 +29,7 @@ class PokemonViewModel: ViewModel() {
 
     internal fun fetchPokemons() {
         viewModelScope.launch {
-            val newPokemons = PokemonRepository.fetchPokemons(offset = currentOffset)
+            val newPokemons = pokemonRepository.fetchPokemons(offset = currentOffset)
             _uiState.update { currentState ->
                 currentState.copy(
                     pokemonList = currentState.pokemonList + newPokemons,

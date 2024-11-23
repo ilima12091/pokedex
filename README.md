@@ -76,8 +76,12 @@ gratuita que provee datos sobre Pokémon. 🎉
 
 ### 🔎 **Implementar una pantalla de Search para buscar Pokemons**
 
-- Inclusión de botone en Home que redirecciona a una pantalla de search.
-- Pantalla de search con fuiltro para buscar por nombre.
+- Inclusión de boton en Home que redirecciona a una pantalla de search.
+- Pantalla de search con filtro para buscar por nombre.
+
+### 🧩 Inyección de Dependencias
+- Se configuró Hilt como el framework de inyección de dependencias para la aplicación.
+- Se inyectaron las dependencias en todos los ViewModels utilizando Hilt.
 
 ---
 

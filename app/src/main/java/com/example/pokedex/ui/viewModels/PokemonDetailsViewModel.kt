@@ -7,15 +7,18 @@ import com.example.pokedex.api.mappers.toTypeNames
 import com.example.pokedex.api.responses.FetchPokemonDetailsResponse
 import com.example.pokedex.api.responses.PokemonType
 import com.example.pokedex.api.responses.Species
+import com.example.pokedex.data.AuthRepository
 import com.example.pokedex.data.FirebaseAuthRepository
 import com.example.pokedex.data.FirestoreUserRepository
 import com.example.pokedex.data.PokemonRepository
 import com.example.pokedex.data.models.FavoritePokemon
 import com.example.pokedex.ui.utils.Constants
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class PokemonDetailsScreenUiState(
     val pokemonDetails: FetchPokemonDetailsResponse? = null,
@@ -27,10 +30,12 @@ data class PokemonDetailsScreenUiState(
     val profilePictureUrl: String? = null
 )
 
-class PokemonDetailsViewModel : ViewModel() {
-    private val firebaseAuthRepository = FirebaseAuthRepository()
-    private val firestoreUserRepository = FirestoreUserRepository()
-
+@HiltViewModel
+class PokemonDetailsViewModel @Inject constructor(
+    private val firebaseAuthRepository: FirebaseAuthRepository,
+    private val firestoreUserRepository: FirestoreUserRepository,
+    private val pokemonRepository: PokemonRepository,
+) : ViewModel() {
     private val _uiState = MutableStateFlow(PokemonDetailsScreenUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -130,7 +135,7 @@ class PokemonDetailsViewModel : ViewModel() {
 
                 Log.d("fetchPokemonDetails", "Fetching details for Pokémon: $name")
 
-                val pokemonDetails = PokemonRepository.fetchPokemonDetails(name)
+                val pokemonDetails = pokemonRepository.fetchPokemonDetails(name)
 
                 // Fetch favorites
                 val isFavorite = firestoreUserRepository.getFavorites(uid).fold(
@@ -185,7 +190,7 @@ class PokemonDetailsViewModel : ViewModel() {
             it.copy(isLoadingEvolutionChain = true)
         }
         viewModelScope.launch {
-            val evolutionChain = PokemonRepository.fetchPokemonEvolutionChain(name)
+            val evolutionChain = pokemonRepository.fetchPokemonEvolutionChain(name)
             _uiState.update {
                 it.copy(
                     evolutionChain = evolutionChain,
