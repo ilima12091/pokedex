@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -81,6 +82,7 @@ fun ProfileScreen(
             Scaffold { innerPadding ->
                 Column(
                     modifier = Modifier
+                        .background(Color.LightGray)
                         .padding(top = innerPadding.calculateTopPadding())
                         .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -105,7 +107,8 @@ fun ProfileScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxHeight()
-                            .clip(RoundedCornerShape(32.dp))
+                            .shadow(8.dp, shape = RoundedCornerShape(32.dp))
+                            .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
                             .background(Color.White)
                             .padding(32.dp),
                         verticalArrangement = Arrangement.spacedBy(24.dp)

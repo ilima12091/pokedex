@@ -15,21 +15,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex.ui.components.SearchHeader
-import com.example.pokedex.ui.components.pokemonList.PokedexHeader
 import com.example.pokedex.ui.components.pokemonList.PokemonRow
-import com.example.pokedex.ui.viewModels.PokemonViewModel
 import com.example.pokedex.ui.viewModels.SearchViewModel
 
 @Composable
@@ -68,7 +61,8 @@ fun SearchScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 label = { Text("Search Pokemon") },
-                placeholder = { Text("Write Pokemon's name") }
+                placeholder = { Text("Write Pokemon's name") },
+                singleLine = true,
             )
 
             Box(
@@ -80,7 +74,7 @@ fun SearchScreen(
                     LazyColumn(
                         state = listState,
                         verticalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = PaddingValues(bottom = 16.dp)
+                        contentPadding = PaddingValues(vertical = 16.dp)
                     ) {
                         items(pokemonsSearch) { pokemon ->
                             PokemonRow(
