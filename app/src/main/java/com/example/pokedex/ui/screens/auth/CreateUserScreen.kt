@@ -1,12 +1,19 @@
 package com.example.pokedex.ui.screens.auth
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -16,18 +23,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.pokedex.ui.components.auth.CreateUserForm
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pokedex.ui.components.auth.AuthHeader
-import com.example.pokedex.ui.theme.AuthBackgroundColor
+import com.example.pokedex.ui.components.auth.CreateUserForm
 import com.example.pokedex.ui.theme.SnackbarActionColor
 import com.example.pokedex.ui.theme.SnackbarContainerColor
 import com.example.pokedex.ui.viewModels.CreateUserState
@@ -56,60 +55,63 @@ fun CreateUserScreen(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Go back",
                     Modifier.size(28.dp),
-                    colorResource(id = android.R.color.black)
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
     ) { innerPadding ->
-        Column(
-            modifier=modifier
+        LazyColumn(
+            modifier = modifier
+                .background(MaterialTheme.colorScheme.secondaryContainer)
                 .padding(innerPadding)
-                .fillMaxSize()
-                .background(color = AuthBackgroundColor),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            AuthHeader(
-                title = "Register Your Account",
-                subtitle = "Become a Pokémon Master",
-            )
-            CreateUserForm(
-                email=email,
-                setEmail=setEmail,
-                password=password,
-                setPassword=setPassword,
-                confirmPassword = confirmPassword,
-                setConfirmPassword=setConfirmPassword,
-                name = name,
-                setName = setName,
-                lastName = lastName,
-                setLastName = setLastName,
-                isLoading = createUserState is CreateUserState.Loading,
-                onCreateUserClick = {
-                    viewModel.createUser(
-                        email,
-                        password,
-                        confirmPassword,
-                        name,
-                        lastName,
-                    )
-                },
-            )
+            item {
+                AuthHeader(
+                    title = "Register Your Account",
+                    subtitle = "Become a Pokémon Master",
+                )
+                CreateUserForm(
+                    email = email,
+                    setEmail = setEmail,
+                    password = password,
+                    setPassword = setPassword,
+                    confirmPassword = confirmPassword,
+                    setConfirmPassword = setConfirmPassword,
+                    name = name,
+                    setName = setName,
+                    lastName = lastName,
+                    setLastName = setLastName,
+                    isLoading = createUserState is CreateUserState.Loading,
+                    onCreateUserClick = {
+                        viewModel.createUser(
+                            email,
+                            password,
+                            confirmPassword,
+                            name,
+                            lastName,
+                        )
+                    },
+                )
 
-            when (createUserState) {
-                is CreateUserState.Success -> {
-                    LaunchedEffect(Unit) {
-                        onUserCreated()
+                when (createUserState) {
+                    is CreateUserState.Success -> {
+                        LaunchedEffect(Unit) {
+                            onUserCreated()
+                        }
                     }
-                }
-                is CreateUserState.Error -> {
-                    val errorMessage = (createUserState as CreateUserState.Error).message
-                    LaunchedEffect(errorMessage) {
-                        snackbarHostState.showSnackbar(errorMessage)
+
+                    is CreateUserState.Error -> {
+                        val errorMessage = (createUserState as CreateUserState.Error).message
+                        LaunchedEffect(errorMessage) {
+                            snackbarHostState.showSnackbar(errorMessage)
+                        }
                     }
+
+                    else -> {}
                 }
-                else -> {}
             }
-
         }
 
         SnackbarHost(

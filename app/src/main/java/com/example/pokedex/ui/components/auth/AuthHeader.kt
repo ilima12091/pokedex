@@ -9,7 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -28,7 +28,6 @@ fun AuthHeader(title: String, subtitle: String) {
             style = TextStyle(
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
             )
         )
 
@@ -39,8 +38,8 @@ fun AuthHeader(title: String, subtitle: String) {
             style = TextStyle(
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Normal,
-                color = Color.DarkGray,
-            )
+            ),
+            modifier = Modifier.alpha(0.6f)
         )
     }
 }
