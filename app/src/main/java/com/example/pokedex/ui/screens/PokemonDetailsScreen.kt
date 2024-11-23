@@ -182,7 +182,7 @@ fun PokemonDetailsScreen(
                         }
                     }
                     Text(
-                        text = getPokemonOrder(pokemonDetails?.order ?: 0),
+                        text = getPokemonOrder(pokemonDetails?.id ?: 0),
                         color = Color.White,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 22.sp
